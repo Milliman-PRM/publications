@@ -15,6 +15,13 @@
   - Traditional uses of recommender algorithm
     - Helping users identify interesting products among many options
     - Ability to scale among a large number of users and/or products
+  - Why recommender vs logistic regression?
+    - Multi-response nature of recommender (vs 100s of model in logistic)
+    - Conditions are often co-morbid and can be expressed well through latent factors
+    - Faster and simpler to train than logistic models, so can be tuned on the fly
+    - Unique relationships for each population
+    - Model perspective is patient-focused, i.e. top N recommendations per patient
+    - Sparse nature of patient condition data
   - Types of recommenders
     - User-based collaborative filtering vs Item-based collaborative filtering
     - Explicit ratings vs Implicit ratings
