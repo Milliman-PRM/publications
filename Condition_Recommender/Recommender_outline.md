@@ -27,7 +27,6 @@
     - Explicit ratings vs Implicit ratings
   - Latent factor matrix factorization
     - Simple intuitive example
-    - Latent factor dot-product example
   - Type of recommender being implemented here
     - Implicit recommendation
     - Spark/blocked approach?
@@ -51,19 +50,20 @@
 
 # Fitting a model
   - Parameters
-    - Alpha
+    - ~~Alpha~~
     - Lambda
     - Rank
-    - (Block size/iterations?)
+    - ~~(Block size/iterations?)~~
   - Actual prediction rating calculation
+    - Latent factor dot-product example
   - Setting up a tuning framework
-    - Potential issues with more traditional "testing" framework
-      - Holding out users/conditions interferes with cohesive latent factors
+    - ~~Potential issues with more traditional "testing" framework~~
+      - ~~Holding out users/conditions interferes with cohesive latent factors~~
     - Holding out a few months of data
     - Evaluating hold-out data by top N prediction methodology
 
 # Model Performance
-  - Ignore previously coded conditions
+  - ~~Ignore previously coded conditions~~
   - Predictive power of 
     - popularity-based model
     - Popularity by age-gender-elig_status?
