@@ -34,17 +34,20 @@
 
 # Data Collection/Feature Engineering
   - What is a "condition"
-    - Determined through claims data/Dx codes
+    - ~~Determined through claims data/Dx codes~~
     - Mapped into similar conditions using AHRQ CCS
-    - Stratified into chronic/non-chronic using AHRQ CCI
+    - ~~Stratified into chronic/non-chronic using AHRQ CCI~~
   - Determining confidence values
-    - Exponential decay (acute vs chronic)
-    - Sum of number of visits
-    - IP vs OP confidence
+    - ~~Exponential decay (acute vs chronic)~~
+    - ~~Sum of number of visits~~
+    - ~~IP vs OP confidence~~
+    - More confidence for recently coded conditions
+    - More confidence for IP vs OP
   - Implementing demographic features
-    - Age, bucketed
+    - Age~~, bucketed~~
     - Gender
-    - Eligibility/policy group
+    - ~~Eligibility/policy group~~
+    - Used to better influence latent factors
 
 # Fitting a model
   - Parameters
