@@ -9,6 +9,7 @@
   - Traditional approach to coding improvement
     - Identify conditions that have been previously coded, but not recently
     - Make sure that conditions have been coded recently if a patient is taking a related drug
+    - Train logistic regressions using large reference datasets to identify uncoded conditions
   - Brief overview of recommender approach
 
 # What is a recommender algorithm?
@@ -23,13 +24,13 @@
     - Model perspective is patient-focused, i.e. top N recommendations per patient
     - Sparse nature of patient condition data
   - Types of recommenders
-    - User-based collaborative filtering vs Item-based collaborative filtering
+    - User-based collaborative filtering vs Item-based collaborative filtering vs matrix factorization
     - Explicit ratings vs Implicit ratings
   - Latent factor matrix factorization
     - Simple intuitive example
   - Type of recommender being implemented here
     - Implicit recommendation
-    - Spark/blocked approach?
+    - Spark~~/blocked approach?~~
 
 # Data Collection/Feature Engineering
   - What is a "condition"
