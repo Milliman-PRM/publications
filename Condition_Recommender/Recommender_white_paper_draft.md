@@ -67,7 +67,7 @@ The hypothetical example below illustrates the process of using latent factors t
 |2|0.4|0.6|0.8|0.1|0.1|
 |3|-0.5|0.1|-0.1|-0.1|0.1|
 |4|0.6|-0.2|0.2|0.5|-0.1|
-|**Rating**|---|0.25|0.73|0.47|-0.87|
+|**Rating**|**---**|**0.25**|**0.73**|**0.47**|**-0.87**|
 
 A condition's rating is calculated as the dot product of the patient's latent factors and the respective condition's latent factors. We would recommend hypertension as the most likely uncoded condition. We can roughly relate each latent factor to a patient characteristic. Latent factor 1 is most likely gender-related, due to the high coefficient for menopause. Latent factor 2 may be related to blood pressure, considering the high coefficients of both diabetes and hypertension. Latent factor 4 may be related to lung issues.
 
