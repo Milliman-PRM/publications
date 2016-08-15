@@ -1,5 +1,8 @@
 
 # Milliman PRM Analytics
+
+----------
+
 ## Recommending uncoded conditions
 
 Recent trends in healthcare legislation have lead to a rise in risk-bearing healthcare provider organizations, such as Accountable Care Organizations. Entrusted with the care of thousands of patients, these organizations must leverage data-driven approaches to population health management in order to improve quality of care and reduce costs.
@@ -16,7 +19,25 @@ If you have ever viewed a product on Amazon or watched a show on Netflix, then y
 
 A common model training process for recommender systems is collaborative filtering, which uses historical rating data to find similarities between users or items. Collaborative filtering often take three forms: user-based, item-based, or matrix factorization. User-based collaborative filtering seeks to find users that have rated items similarly, and predict other items that similar users liked. Item-based collaborative filtering seeks to find similarities between items themselves, and then recommend items that are similar to those that a user rated highly. Matrix factorization collaborative filtering finds similarities between users and items through latent factors, which are then used to composite predicted ratings for each item.
 
-[Collaborative filtering example]
+For an illustration of collaborative filtering, consider the example patient panel below.
+
+|Condition|Patient 1|Patient 2|Patient 3|Patient 4|
+|---|---|---|---|---|
+|Diabetes|X|X|||
+|Hypertension|X|X|||
+|Asthma|||X||
+|COPD||X|X|X|
+|Back Pain|||X|X|
+
+Patient 1 appears to be most similar to Patient 2. Thus, for Patient 1, we would predict that COPD is the most likely uncoded condition. Likewise, Patient 4 is most similar to Patient 3, so we would assume that asthma is the most likely uncoded condition for Patient 4.
+
+|Condition|Patient 1|Patient 2|Patient 3|Patient 4|
+|---|---|---|---|---|
+|Diabetes|X|X|||
+|Hypertension|X|X|||
+|Asthma|||X|O|
+|COPD|O|X|X|X|
+|Back Pain|||X|X|
 
 Additionally, the preference inputs in recommender systems may take two forms: explicit ratings or implicit ratings. Explicit ratings are generated when the users themselves identify their preference, such as giving a rating to a movie or a product. While explicit ratings carry a higher level of confidence for a user's preference, they are often not available. More commonly, implicit ratings are inferred from a user's actions, such as viewing a movie or a product.
 
