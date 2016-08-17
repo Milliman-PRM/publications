@@ -57,7 +57,7 @@ The two main demographic features are age and gender. Unlike condition features,
 
 The two most important parameters for model selection are lambda, the regularization parameter, and rank, the number of latent factors. Lambda should be tuned to avoid overfitting in the training data, while also still allowing for meaningful variance in predictions. Rank must be selected to allow for meaningful groups of latent factors, while avoiding the computational burden of higher rank models.
 
-Finding an optimal selection of parameters requires a model tuning framework. We would like to determine a model fit which best accomplishes our objective: predicting uncoded conditions. For this purpose, we create a tuning dataset which excludes the most recent months of data. The held out data is analyzed to find conditions that were coded for the first time in a member's medical history. For each model fit, we find each member's top ten recommendations of uncoded conditions. Parameters are chosen from the model fit which recommends the highest number of new conditions in the hold-out set within the top ten predictions.
+Finding an optimal selection of parameters requires a model tuning framework. We would like to determine a model fit which best accomplishes our objective: predicting uncoded conditions. For this purpose, we create a tuning dataset which excludes the most recent months of data. The held out data is analyzed to find conditions that were coded for the first time in a member's medical history. For each model fit, we find each member's top ten recommendations of uncoded conditions. We choose parameters from the model fit which recommends the highest number of new conditions in the hold-out set within the top ten predictions.
 
 The hypothetical example below illustrates the process of using latent factors to determine predicted ratings. For simplicity, we will assume a model rank of four, with only four conditions being considered.
 
@@ -77,9 +77,9 @@ There are two characteristics of our model performance that we are interested in
 
 The illustration below demonstrates prediction accuracy for our different models as the number of predictions increases. Here we have focused on chronic conditions, as these conditions are more likely to go uncoded if they are not the primary reason that a patient seeks care.
 
-[Illustration placeholder]
+![Chronic Condition Predictions](eval_chronic.png "Chronic Condition Predictions")\
 
-The illustration below demonstrates prediction accuracy, now focusing on acute conditions.
+The illustration below demonstrates prediction accuracy, now focusing on non-chronic conditions.
 
 [Illustration placeholder]
 
