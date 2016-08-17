@@ -17,7 +17,7 @@ While coding improvement initiatives can focus on conditions that have previousl
 
 If you have ever viewed a product on Amazon or watched a show on Netflix, then you have been a part of a recommender system. Recommender systems are commonly used to help users identify potentially interesting products among a large list of options, through the use of historical viewing or rating information. For example, Netflix will recommend certain shows to you based on your previous viewings. These recommendations are built using viewing or rating data from other users who have viewed the same shows as you.
 
-A common model training process for recommender systems is collaborative filtering, which uses historical rating data to find similarities between users or items. Collaborative filtering often take three forms: user-based, item-based, or matrix factorization. User-based collaborative filtering seeks to find users that have rated items similarly, and predict other items that similar users liked. Item-based collaborative filtering seeks to find similarities between items themselves, and then recommend items that are similar to those that a user rated highly. Matrix factorization collaborative filtering finds similarities between users and items through latent factors, which are then used to composite predicted ratings for each item.
+A common model training process for recommender systems is collaborative filtering, which uses historical rating data to find similarities between users or items. Collaborative filtering often takes three forms: user-based, item-based, or matrix factorization. User-based collaborative filtering seeks to find users that have rated items similarly, and predict other items that similar users liked. Item-based collaborative filtering seeks to find similarities between items themselves, and then recommend items that are similar to a user's highly rated items. Matrix factorization collaborative filtering finds similarities between users and items through latent factors, which are then used to composite predicted ratings for each item.
 
 For an illustration of collaborative filtering, consider the example patient panel below.
 
@@ -41,7 +41,7 @@ Patient 1 appears to be most similar to Patient 2. Thus, for Patient 1, we would
 
 Additionally, the preference inputs in recommender systems may take two forms: explicit ratings or implicit ratings. Explicit ratings are generated when the users themselves identify their preference, such as giving a rating to a movie or a product. While explicit ratings carry a higher level of confidence for a user's preference, they are often not available. More commonly, implicit ratings are inferred from a user's actions, such as viewing a movie or a product.
 
-Our algorithm utilizes an implicit rating, collaborative filtering matrix-factorization model to predict uncoded conditions. Each patient is a "user", with conditions being recommended as the items. Implicit condition confidence values, or ratings, are inferred from the medical history of each patient in a population. These user, condition, and confidence inputs are applied to generate latent factors for each patient and condition. These latent factors, an abstract representation of similarities between users and products, can be combined to generate a predicted rating for each patient-condition pairing. This model has been implemented in Apache Spark, a clustered computing framework.
+Our algorithm utilizes an implicit rating, collaborative filtering matrix-factorization model to predict uncoded conditions. Each patient is a "user", with conditions being recommended as the items. Implicit condition confidence values, or ratings, are inferred from the medical history of each patient in a population. These user, condition, and confidence inputs are applied to generate latent factors for each patient and condition. These latent factors, an abstract representation of similarities between users and conditions, can be combined to generate a predicted rating for each patient-condition pairing. This model has been implemented in Apache Spark, a clustered computing framework.
 
 A matrix factorization recommender system, in many ways, seems like a natural fit for the process of recommending conditions, and offers some advantages over traditional models. This algorithm is fast and simple to train, and thus can realistically be tuned to find unique relationships for each patient population. A recommender system is more patient-focused, and seeks to find top recommendations that are tailored to a patient's unique history. Additionally, a matrix factorization model is able to handle the sparse nature of patient condition information well. Finally, the comorbid nature of many conditions can be expressed well through the use of latent factors in a matrix factorization model.
 
@@ -55,7 +55,7 @@ The two main demographic features are age and gender. Unlike condition features,
 
 ## Fitting the Model
 
-The two most important parameters for model selection are lambda, the regularization parameter, and rank, the number of latent factors. Lambda should be tuned to avoid overfitting in the training data, while also still allowing for meaningful variance in predictions. Rank must be selected to allow for meaningful groups of latent factors, while avoiding the computational burden of higher rank models.
+The two most important parameters for model selection are lambda, the regularization parameter, and rank, the number of latent factors. Lambda should be tuned to avoid overfitting in the training data, while also still allowing for meaningful variance in predictions. Rank must be selected to allow for meaningful groupings in latent factors, while avoiding the computational burden of higher rank models.
 
 Finding an optimal selection of parameters requires a model tuning framework. We would like to determine a model fit which best accomplishes our objective: predicting uncoded conditions. For this purpose, we create a tuning dataset which excludes the most recent months of data. The held out data is analyzed to find conditions that were coded for the first time in a member's medical history. For each model fit, we find each member's top ten recommendations of uncoded conditions. We choose parameters from the model fit which recommends the highest number of new conditions in the hold-out set within the top ten predictions.
 
@@ -69,7 +69,7 @@ The hypothetical example below illustrates the process of using latent factors t
 |4|0.6|-0.2|0.2|0.5|-0.1|
 |**Rating**|**---**|**0.25**|**0.73**|**0.47**|**-0.87**|
 
-A condition's rating is calculated as the dot product of the patient's latent factors and the respective condition's latent factors. We would recommend hypertension as the most likely uncoded condition. We can roughly relate each latent factor to a patient characteristic. Latent factor 1 is most likely gender-related, due to the high coefficient for menopause. Latent factor 2 may be related to blood pressure, considering the high coefficients of both diabetes and hypertension. Latent factor 4 may be related to lung issues.
+A condition's rating is calculated as the dot product of the patient's latent factors and the respective condition's latent factors. Here, we would recommend hypertension as the most likely uncoded condition. While latent factors are not easily interpretable, we can roughly associate each latent factor with a patient characteristic. Latent factor 1 is likely gender-related, due to the high coefficient for menopause. Latent factor 2 may be related to blood pressure, considering the high coefficients of both diabetes and hypertension, while latent factor 4 may be related to lung issues.
 
 ## Model Performance
 
@@ -79,9 +79,11 @@ The illustration below demonstrates prediction accuracy for our different models
 
 ![Chronic Condition Predictions](eval_chronic.png "Chronic Condition Predictions")\
 
-The illustration below demonstrates prediction accuracy, now focusing on non-chronic conditions.
+The illustration below demonstrates prediction accuracy, now focusing on non-chronic conditions. Because of the higher intensity level required in care, non-chronic conditions are more likely to be coded at the time the illnesses arises.
 
 ![Non-Chronic Condition Predictions](eval_non_chronic.png "Non-Chronic Condition Predictions")\
+
+For both the chronic and non-chronic conditions, the recommender model outperforms the popularity model. Although not captured in this metric, it's important to note that predictions from the recommender model are unique at the patient-level. On the other hand, a popularity-based model performs well for a population-wide view, but is likely less meaningful at a patient level.
 
 ## Case Study
 
@@ -97,7 +99,7 @@ The table below shows the top ten recommendations and their relative rating for 
 
 ![Diabetes Member Predictions](Member_1_predictions.png "Diabetes Member Predictions")\
 
-The table below breaks down the relative contribution for the top recommended condition, thyroid disorders. A recommendation's rating can be decomposed into linear contributions from each of the input features, based on the feature's confidence value and latent factors.
+The table below breaks down the relative contribution for the top recommended condition, thyroid disorders. A recommendation's rating can be decomposed into contributions from each of the input features, based on the feature's confidence value and latent factors.
 
 ![Diabetes Member Explanations](Member_1_explanations.png "Diabetes Member Explanations")\
 
