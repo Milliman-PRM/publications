@@ -49,7 +49,7 @@ Our implementation utilizes an implicit rating, matrix-factorization model to pr
 The example below illustrates using the estimated latent factors to generate recommendations for a single patient.
 
 |Latent Factor|Patient|Diabetes|Hypertension|Asthma|Menopause|
-|---|---|---|---|---|---|
+|:---|---:|---:|---:|---:|---:|
 |1|0.8|0.2|0.3|0.1|-1.0|
 |2|0.4|0.6|0.8|0.1|0.1|
 |3|-0.5|0.1|-0.1|-0.1|0.1|
