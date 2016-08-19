@@ -5,11 +5,11 @@
 
 ## Recommending uncoded conditions
 
-Recent trends in healthcare legislation have lead to a rise in risk-bearing healthcare provider organizations, such as Accountable Care Organizations. Entrusted with the care of thousands of patients, these organizations must leverage data-driven approaches to population health management in order to improve quality of care and reduce costs.
+Recent trends in healthcare legislation have led to a rise in risk-bearing healthcare provider organizations, such as Accountable Care Organizations. Entrusted with the care of thousands of patients, these organizations must leverage data-driven approaches to population health management in order to improve quality of care and reduce costs.
 
 One area of concern for data-driven analysis involves the accuracy of a patient's clinical documentation. Efforts to improve accuracy in a population's clinical records are often referred to as clinical documentation improvement or coding improvement. From a clinical standpoint, the benefit from coding improvement is obvious. A patient record that contains the entirety of the patient's illnesses will result in a more appropriate treatment plan.
 
-However, there are also financial incentives in coding improvement. Alternative payment models often account for the health status of a patient population, through the use of risk scores, when reimbursing a healthcare provider for services. A more accurate clinical record ensures that a risk-bearing healthcare provider is appropriately compensated when they care for a more sick population.
+However, there are also financial incentives in coding improvement. Alternative payment models often account for the health status of a patient population, through the use of risk scores, when reimbursing a healthcare provider for services. A more accurate clinical record ensures that a risk-bearing healthcare provider is appropriately compensated when they care for a sicker population.
 
 Coding improvement initiatives often start by looking through a given patient's records for explicit evidence of conditions that did not make it into the official diagnosis information: conditions coded on claims in prior years, or mentioned in the unstructured text of an electronic medical record.  After these explicit sources of coding improvement are exhausted, more advanced methods can try to suggest conditions that have never appeared on a patient's medical history. One approach can be to find explicit evidence of missed codings in large reference datasets and train predictive models that can be then be applied to other, potentially slimmer sources. This can work well for predicting specific chronic conditions in a population, even when only a short claims history is available.
 
@@ -86,7 +86,7 @@ The first image focuses on chronic conditions, as these conditions are more like
 
 ![Chronic Condition Predictions](eval_chronic.png "Chronic Condition Predictions")
 
-The next image demonstrates focuses on non-chronic conditions. Because of the higher intensity level required in care, non-chronic conditions are more likely to be coded at the time the illnesses arises.
+The next image demonstrates focuses on non-chronic conditions. Because of the higher intensity level required in care, non-chronic conditions are more likely to be coded at the time the illnesses arise.
 
 ![Non-Chronic Condition Predictions](eval_non_chronic.png "Non-Chronic Condition Predictions")
 
