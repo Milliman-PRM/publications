@@ -1,12 +1,11 @@
 /*
-### CODE OWNERS: Ben Copeland, Brandon Patterson, Kyle Baird
+### CODE OWNERS: Ben Copeland
 
 ### OBJECTIVE:
-	Apply exponential time decay to the credibility values of each condition
-	to provide more appropriate values into a recommender system
+	Pull a sample of member data for case-study purposes
 
 ### DEVELOPER NOTES:
-	
+	Members will have to be manually selected based on what you're looking for
 */
 options sasautos = ("S:\Misc\_IndyMacros\Code\General Routines" sasautos) compress = yes;
 %include "%sysget(UserProfile)\HealthBI_LocalData\Supp01_Parser.sas" / source2;
