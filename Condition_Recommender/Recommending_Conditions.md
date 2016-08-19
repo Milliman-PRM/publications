@@ -86,7 +86,7 @@ The first image focuses on chronic conditions, as these conditions are more like
 
 ![Chronic Condition Predictions](eval_chronic.png "Chronic Condition Predictions")
 
-The next image demonstrates focuses on non-chronic conditions. Because of the higher intensity level required in care, non-chronic conditions are more likely to be coded at the time the illnesses arise.
+The next image focuses on non-chronic conditions. Because of the higher intensity level required in care, non-chronic conditions are more likely to be coded at the time the illnesses arise.
 
 ![Non-Chronic Condition Predictions](eval_non_chronic.png "Non-Chronic Condition Predictions")
 
