@@ -78,7 +78,7 @@ This whole tuning process is fast enough to be reasonably done every time we nee
 
 ## Model Performance
 
-When using any advanced analytics, it is always important to have a sane null model to compare against.  For a recommender model, the most basic reference model would be a simple *popularity* model that just always recommends the most common conditions for the population (that the given patient does not already have). For example, a popularity model would likely recommend hypertension as the first suggestion for all patients (that do not already have hypertension).
+When using any advanced analytics, it is always important to have a useful baseline model to compare against.  For a recommender model, the most basic reference model would be a simple *popularity* model that recommends the population's most common conditions, excluding conditions that have already been coded for a patient. For example, a popularity model would recommend the most common condition, such as hypertension, as the first recommendation for all patients that do not already have hypertension coded.
 
 The illustrations below compare prediction accuracy on a sample population for our recommender model versus the simpler popularity model. The vertical axis shows the estimate of accuracy discussed above: the percentage of newly manifested conditions from the hold-out set that were in the top N recommendations for each patient.  The horizontal axis displays the results for different numbers of recommendations for each patient.
 
