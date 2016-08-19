@@ -58,9 +58,11 @@ The two main demographic features are age and gender. Unlike condition features,
 
 ## Fitting the Model
 
-The two most important parameters for model selection are lambda, the regularization parameter, and rank, the number of latent factors. Lambda should be tuned to avoid overfitting in the training data, while also still allowing for meaningful variance in predictions. Rank must be selected to allow for meaningful groupings in latent factors, while avoiding the computational burden of higher rank models.
+The two most important hyper-parameters are lambda, the regularization parameter, and rank, the number of latent factors. Lambda should be strong enough to avoid overfitting in the training data, while also still allowing for meaningful personalization in predictions. Rank must be high enough to allow for meaningful groupings in latent factors, while avoiding the computational burden of higher rank models.
 
-Finding an optimal selection of parameters requires a model tuning framework. We would like to determine a model fit which best accomplishes our objective: predicting uncoded conditions. For this purpose, we create a tuning dataset which excludes the most recent months of data. The held out data is analyzed to find conditions that were coded for the first time in a member's medical history. For each model fit, we find each member's top ten recommendations of uncoded conditions. We choose parameters from the model fit which recommends the highest number of new conditions in the hold-out set within the top ten predictions.
+We want to determine what hyper-parameter values are useful for predicting uncoded conditions. To accomplish this, we create a tuning dataset which excludes the most recent months of data. The hold-out data is analyzed to find conditions coded for the first time in a patient's medical history. We trained a variety of models on the tuning dataset with different hyper-parameter values.  For each model we calculate what percentage of the newly manifested conditions were predicted in each patient's top ten recommendations. We then took the best performing hyper-parameter values and used them to train a final model on all of the available data to make our final recommendations.
+
+This whole tuning process is fast enough to be reasonably done every time we need to calculate recommendations.
 
 The hypothetical example below illustrates the process of using latent factors to determine predicted ratings. For simplicity, we will assume a model rank of four, with only four conditions being considered.
 
