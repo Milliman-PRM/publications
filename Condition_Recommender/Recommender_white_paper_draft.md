@@ -7,11 +7,14 @@
 
 Recent trends in healthcare legislation have lead to a rise in risk-bearing healthcare provider organizations, such as Accountable Care Organizations. Entrusted with the care of thousands of patients, these organizations must leverage data-driven approaches to population health management in order to improve quality of care and reduce costs.
 
-One potential area for gaps in care involves the accuracy of a patient's clinical documentation. Efforts to improve accuracy in a population's clinical records are often referred to as clinical documentation improvement or coding improvement. From a clinical standpoint, the benefit from coding improvement is obvious. A patient record that contains the entirety of the patient's illnesses will result in a more appropriate treatment plan.
+One area of concern for data-driven analysis involves the accuracy of a patient's clinical documentation. Efforts to improve accuracy in a population's clinical records are often referred to as clinical documentation improvement or coding improvement. From a clinical standpoint, the benefit from coding improvement is obvious. A patient record that contains the entirety of the patient's illnesses will result in a more appropriate treatment plan.
 
 However, there are also financial incentives in coding improvement. Alternative payment models often account for the health status of a patient population, through the use of risk scores, when reimbursing a healthcare provider for services. A more accurate clinical record ensures that a risk-bearing healthcare provider is appropriately compensated when they care for a more sick population.
 
-While coding improvement initiatives can focus on conditions that have previously appeared in a medical record, a less obvious approach is to try and identify conditions that have never appeared on a patient's medical record. Traditional approaches for identifying uncoded conditions have used logistic regressions to identify likely comorbidities. At Milliman PRM Analytics, we have taken a unique approach to identifying uncoded conditions through the use of a recommender system. Our recommender system seeks to identify common clinical patterns among patients in a population, and predict conditions that may have previously gone unnoticed.
+Coding improvement initiatives often start by looking through a given patient's records for explicit evidence of conditions that did not make it into the official diagnosis information: conditions coded on claims in prior years, or mentioned in the unstructured text of an electronic medical record.  After these explicit sources of coding improvement are exhausted, more advanced methods can try to suggest conditions that have never appeared on a patient's medical history. One approach can be to find explicit evidence of missed codings in large reference datasets and train predictive models that can be then be applied to other, slimmer sources. This can work well for predicting specific chronic conditions in a population with a very short claims history.
+
+At Milliman PRM Analytics, we have taken a different approach to identifying uncoded conditions through the use of a recommender system. Our recommender system seeks to identify common clinical patterns among patients in a population; we then make patient level condition recommendations based upon comorbities experienced by similar patients.  The recommender approach works well at giving personalized recommendations from the patient perspective.
+
 
 ## What is a recommender system?
 
@@ -108,6 +111,3 @@ The demographic features have a high contribution to the recommendation, partial
 ## Conclusion
 
 Accurately documenting a patient's clinical status will be increasingly important as more healthcare providers enter into alternative payment arrangements. Coding improvement can lead to better clinical outcomes as well as increased revenue in the case of risk-based arrangements. Our recommender system provides a unique perspective towards coding improvement that produces useful recommendations of uncoded conditions.
-
-
-
