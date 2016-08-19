@@ -78,17 +78,19 @@ This whole tuning process is fast enough to be reasonably done every time we nee
 
 ## Model Performance
 
-There are two characteristics of our model performance that we are interested in: how does this model perform relative to other methods, and how does the model perform when the number of predictions increases. We will examine three models, our predictive model, a popularity-based model for the overall population, and a popularity-based model adjusted for demographics.
+When using any advanced analytics, it is always important to have a sane null model to compare against.  For a recommender model, the most basic reference model would be a simple *popularity* model that just always recommends the most common conditions for the population (that the given patient does not already have). For example, a popularity model would likely recommend hypertension as the first suggestion for all patients (that do not already have hypertension).
 
-The illustration below demonstrates prediction accuracy for our different models as the number of predictions increases. Here we have focused on chronic conditions, as these conditions are more likely to go uncoded if they are not the primary reason that a patient seeks care.
+The illustrations below compare prediction accuracy on a sample population for our recommender model versus the simpler popularity model. The vertical axis shows the estimate of accuracy discussed above: the percentage of newly manifested conditions from the hold-out set that were in the top N recommendations for each patient.  The horizontal axis displays the results for different numbers of recommendations for each patient.
+
+The first image focuses on chronic conditions, as these conditions are more likely to go uncoded if they are not the primary reason that a patient seeks care.
 
 ![Chronic Condition Predictions](eval_chronic.png "Chronic Condition Predictions")\
 
-The illustration below demonstrates prediction accuracy, now focusing on non-chronic conditions. Because of the higher intensity level required in care, non-chronic conditions are more likely to be coded at the time the illnesses arises.
+The next image demonstrates focuses on non-chronic conditions. Because of the higher intensity level required in care, non-chronic conditions are more likely to be coded at the time the illnesses arises.
 
 ![Non-Chronic Condition Predictions](eval_non_chronic.png "Non-Chronic Condition Predictions")\
 
-For both the chronic and non-chronic conditions, the recommender model outperforms the popularity model. Although not captured in this metric, it's important to note that predictions from the recommender model are unique at the patient-level. On the other hand, a popularity-based model performs well for a population-wide view, but is likely less meaningful at a patient level.
+For both the chronic and non-chronic conditions, the recommender model consistently outperforms the popularity model.
 
 ## Case Study
 
