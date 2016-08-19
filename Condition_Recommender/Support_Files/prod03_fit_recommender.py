@@ -124,7 +124,7 @@ def main() -> int:
     LOGGER.info('Loading demographic features dataframe')
     df_demog = sparkapp.load_df(PATH_DEMOG_FEATURES)
 
-    df_feature_all = munge_features(df_demog, df_tune_feat)
+    df_feature_all = munge_features(df_demog, df_tune_feat).filter(~isnull('chronic_flag'))
 
     ## Create user/condition mappings
 
@@ -349,7 +349,7 @@ class Recommender:
                         pddf_product_expand[j:j + 1].transpose()
                     )
                 ) * confidence[j, j]
-                df_sim_weight.loc[index] = np.array([user_id, i, j, sim_weight])
+                df_sim_weight.loc[index] = np.array([user_id, i+1, j+1, sim_weight])
                 index += 1
 
         return df_sim_weight
