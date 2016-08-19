@@ -5,11 +5,11 @@
 
 ## Recommending uncoded conditions
 
-Recent trends in healthcare legislation have lead to a rise in risk-bearing healthcare provider organizations, such as Accountable Care Organizations. Entrusted with the care of thousands of patients, these organizations must leverage data-driven approaches to population health management in order to improve quality of care and reduce costs.
+Recent trends in healthcare legislation have led to a rise in risk-bearing healthcare provider organizations, such as Accountable Care Organizations. Entrusted with the care of thousands of patients, these organizations must leverage data-driven approaches to population health management in order to improve quality of care and reduce costs.
 
 One area of concern for data-driven analysis involves the accuracy of a patient's clinical documentation. Efforts to improve accuracy in a population's clinical records are often referred to as clinical documentation improvement or coding improvement. From a clinical standpoint, the benefit from coding improvement is obvious. A patient record that contains the entirety of the patient's illnesses will result in a more appropriate treatment plan.
 
-However, there are also financial incentives in coding improvement. Alternative payment models often account for the health status of a patient population, through the use of risk scores, when reimbursing a healthcare provider for services. A more accurate clinical record ensures that a risk-bearing healthcare provider is appropriately compensated when they care for a more sick population.
+However, there are also financial incentives in coding improvement. Alternative payment models often account for the health status of a patient population, through the use of risk scores, when reimbursing a healthcare provider for services. A more accurate clinical record ensures that a risk-bearing healthcare provider is appropriately compensated when they care for a sicker population.
 
 Coding improvement initiatives often start by looking through a given patient's records for explicit evidence of conditions that did not make it into the official diagnosis information: conditions coded on claims in prior years, or mentioned in the unstructured text of an electronic medical record.  After these explicit sources of coding improvement are exhausted, more advanced methods can try to suggest conditions that have never appeared on a patient's medical history. One approach can be to find explicit evidence of missed codings in large reference datasets and train predictive models that can be then be applied to other, potentially slimmer sources. This can work well for predicting specific chronic conditions in a population, even when only a short claims history is available.
 
@@ -44,9 +44,21 @@ Patient 1 appears to be most similar to Patient 2. Thus, for Patient 1, we would
 
 The preference inputs in recommender systems may take two forms: explicit ratings or implicit ratings. Explicit ratings are generated when the users themselves identify their preference, such as giving a rating to a movie or a product. While explicit ratings carry a higher level of confidence for a user's preference, they are often not available. More commonly, implicit ratings are inferred from a user's actions, such as viewing a movie or buying a product.
 
-Our implementation utilizes an implicit rating, matrix-factorization model to predict uncoded conditions. Each patient is a "user", with conditions being recommended as the "items". Implicit condition confidence values, or ratings, are inferred from the medical history of each patient in a population. These user, condition, and confidence inputs are applied to generate latent factors for each patient and condition. These latent factors, an abstract representation of similarities between users and conditions, can be combined to generate a predicted rating for each patient-condition pairing. This model has been implemented in Apache Spark, a clustered computing framework.
+Our implementation utilizes an implicit rating, matrix-factorization model to predict uncoded conditions. Each patient is a "user", with conditions being recommended as the "items". Implicit condition confidence values, or ratings, are inferred from the medical history of each patient in a population. These user, condition, and confidence inputs are processed to generate latent factors for each patient and condition. These latent factors, an abstract representation of similarities between users and conditions, can be combined to generate a predicted rating for each patient-condition pairing.
 
-A matrix factorization recommender system is fast and simple to train, and thus can realistically be tuned to find unique relationships for each patient population. It works well with the sparse nature of patient condition information (e.g. most patients only have a handful of conditions). A recommender system is more patient-focused, and seeks to find top recommendations that are tailored to each patient's unique history. Finally, the comorbid nature of many conditions can be naturally expressed via latent factors (e.g. a latent factor related to cardiovascular disease can usefully explain many conditions).
+The example below illustrates using the estimated latent factors to generate recommendations for a single patient.
+
+|Latent Factor|Patient|Diabetes|Hypertension|Asthma|Menopause|
+|:---|---:|---:|---:|---:|---:|
+|1|0.8|0.2|0.3|0.1|-1.0|
+|2|0.4|0.6|0.8|0.1|0.1|
+|3|-0.5|0.1|-0.1|-0.1|0.1|
+|4|0.6|-0.2|0.2|0.5|-0.1|
+|**Patient Rating**|**---**|**0.23**|**0.73**|**0.47**|**-0.87**|
+
+A condition's rating for a given patient is calculated as the dot product of the patient's latent factors and the respective condition's latent factors (e.g. Diabetes Rating = 0.8x0.2 + 0.4x0.6 + -0.5x0.1 + 0.6x-0.2). Here, we would recommend hypertension as the most likely uncoded condition. While latent factors are not easily interpretable, we could roughly associate each latent factor with a patient characteristic. Latent factor 1 is likely gender-related, due to the high coefficient for menopause. Latent factor 2 may be related to blood pressure, considering the high coefficients of both diabetes and hypertension, while latent factor 4 may be related to lung issues.  Most real matrix factorization models use so many latent factors it would not be reasonable to try and actually attach interpretations to them.
+
+We are using matrix factorization because is fast and simple to train, and thus can realistically be tuned to find unique relationships for each patient population. We utilized Apache Spark, a clustered computing framework, for implementation to get additional speed by distributing the calculations. Matrix factorization works well with the sparse nature of patient condition information (e.g. most patients only have a handful of conditions). Finally, the comorbid nature of many conditions can be naturally expressed via latent factors (e.g. a latent factor related to cardiovascular disease can usefully explain many conditions).
 
 ## Feature Engineering
 
@@ -58,35 +70,27 @@ The two main demographic features are age and gender. Unlike condition features,
 
 ## Fitting the Model
 
-The two most important parameters for model selection are lambda, the regularization parameter, and rank, the number of latent factors. Lambda should be tuned to avoid overfitting in the training data, while also still allowing for meaningful variance in predictions. Rank must be selected to allow for meaningful groupings in latent factors, while avoiding the computational burden of higher rank models.
+The two most important hyper-parameters are lambda, the regularization parameter, and rank, the number of latent factors. Lambda should be strong enough to avoid overfitting in the training data, while also still allowing for meaningful personalization in predictions. Rank must be high enough to allow for meaningful groupings in latent factors, while avoiding the computational burden of higher rank models.
 
-Finding an optimal selection of parameters requires a model tuning framework. We would like to determine a model fit which best accomplishes our objective: predicting uncoded conditions. For this purpose, we create a tuning dataset which excludes the most recent months of data. The held out data is analyzed to find conditions that were coded for the first time in a member's medical history. For each model fit, we find each member's top ten recommendations of uncoded conditions. We choose parameters from the model fit which recommends the highest number of new conditions in the hold-out set within the top ten predictions.
+We want to determine what hyper-parameter values are useful for predicting uncoded conditions. To accomplish this, we create a tuning dataset which excludes the most recent months of data. The hold-out data is analyzed to find conditions coded for the first time in a patient's medical history. We trained a variety of models on the tuning dataset with different hyper-parameter values.  For each model we calculate what percentage of the newly manifested conditions were predicted in each patient's top ten recommendations. We then took the best performing hyper-parameter values and used them to train a final model on all of the available data to make our final recommendations.
 
-The hypothetical example below illustrates the process of using latent factors to determine predicted ratings. For simplicity, we will assume a model rank of four, with only four conditions being considered.
-
-|Latent Factor|Patient|Diabetes|Hypertension|Asthma|Menopause|
-|---|---|---|---|---|---|
-|1|0.8|0.2|0.3|0.1|-1.0|
-|2|0.4|0.6|0.8|0.1|0.1|
-|3|-0.5|0.1|-0.1|-0.1|0.1|
-|4|0.6|-0.2|0.2|0.5|-0.1|
-|**Rating**|**---**|**0.25**|**0.73**|**0.47**|**-0.87**|
-
-A condition's rating is calculated as the dot product of the patient's latent factors and the respective condition's latent factors. Here, we would recommend hypertension as the most likely uncoded condition. While latent factors are not easily interpretable, we can roughly associate each latent factor with a patient characteristic. Latent factor 1 is likely gender-related, due to the high coefficient for menopause. Latent factor 2 may be related to blood pressure, considering the high coefficients of both diabetes and hypertension, while latent factor 4 may be related to lung issues.
+This whole tuning process is fast enough to be reasonably done every time we need to calculate recommendations.
 
 ## Model Performance
 
-There are two characteristics of our model performance that we are interested in: how does this model perform relative to other methods, and how does the model perform when the number of predictions increases. We will examine three models, our predictive model, a popularity-based model for the overall population, and a popularity-based model adjusted for demographics.
+When using any advanced analytics, it is always important to have a useful baseline model to compare against.  For a recommender model, the most basic reference model would be a simple *popularity* model that recommends the population's most common conditions, excluding conditions that have already been coded for a patient. For example, a popularity model would recommend the most common condition, such as hypertension, as the first recommendation for all patients that do not already have hypertension coded.
 
-The illustration below demonstrates prediction accuracy for our different models as the number of predictions increases. Here we have focused on chronic conditions, as these conditions are more likely to go uncoded if they are not the primary reason that a patient seeks care.
+The illustrations below compare prediction accuracy on a sample population for our recommender model versus the simpler popularity model. The vertical axis shows the estimate of accuracy discussed above: the percentage of newly manifested conditions from the hold-out set that were in the top N recommendations for each patient.  The horizontal axis displays the results for different numbers of recommendations for each patient.
 
-![Chronic Condition Predictions](eval_chronic.png "Chronic Condition Predictions")\
+The first image focuses on chronic conditions, as these conditions are more likely to go uncoded if they are not the primary reason that a patient seeks care.
 
-The illustration below demonstrates prediction accuracy, now focusing on non-chronic conditions. Because of the higher intensity level required in care, non-chronic conditions are more likely to be coded at the time the illnesses arises.
+![Chronic Condition Predictions](eval_chronic.png "Chronic Condition Predictions")
 
-![Non-Chronic Condition Predictions](eval_non_chronic.png "Non-Chronic Condition Predictions")\
+The next image focuses on non-chronic conditions. Because of the higher intensity level required in care, non-chronic conditions are more likely to be coded at the time the illnesses arise.
 
-For both the chronic and non-chronic conditions, the recommender model outperforms the popularity model. Although not captured in this metric, it's important to note that predictions from the recommender model are unique at the patient-level. On the other hand, a popularity-based model performs well for a population-wide view, but is likely less meaningful at a patient level.
+![Non-Chronic Condition Predictions](eval_non_chronic.png "Non-Chronic Condition Predictions")
+
+For both the chronic and non-chronic conditions, the recommender model consistently outperforms the popularity model.
 
 ## Case Study
 
@@ -96,15 +100,15 @@ Below we will examine model inputs and model results for a sample patient with d
 
 The table below shows the input features and their respective confidence values. Demographic features are given a constant confidence value, whereas the confidence values for condition features are a factor of the patient medical history.
 
-![Diabetes Member Features](Member_1_features.png "Diabetes Member Features")\
+![Diabetes Patient Features](Member_1_features.png "Diabetes Patient Features")
 
 The table below shows the top ten recommendations and their relative rating for this patient. The ratings are determined through a recombination of latent factors for the patient and the respective condition.
 
-![Diabetes Member Predictions](Member_1_predictions.png "Diabetes Member Predictions")\
+![Diabetes Patient Predictions](Member_1_predictions.png "Diabetes Patient Predictions")
 
 The table below breaks down the relative contribution for the top recommended condition, thyroid disorders. A recommendation's rating can be decomposed into contributions from each of the input features, based on the feature's confidence value and latent factors.
 
-![Diabetes Member Explanations](Member_1_explanations.png "Diabetes Member Explanations")\
+![Diabetes Patient Explanations](Member_1_explanations.png "Diabetes Patient Explanations")
 
 The demographic features have a high contribution to the recommendation, partially due to the high confidence value associated with these features. Hypertension and diabetes are other strong contributing factors. Male gender appears to be slightly negatively associated with thyroid disorders.
 
