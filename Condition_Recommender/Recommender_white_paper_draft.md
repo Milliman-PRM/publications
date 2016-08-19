@@ -84,11 +84,11 @@ The illustrations below compare prediction accuracy on a sample population for o
 
 The first image focuses on chronic conditions, as these conditions are more likely to go uncoded if they are not the primary reason that a patient seeks care.
 
-![Chronic Condition Predictions](eval_chronic.png "Chronic Condition Predictions")\
+![Chronic Condition Predictions](eval_chronic.png "Chronic Condition Predictions")
 
 The next image demonstrates focuses on non-chronic conditions. Because of the higher intensity level required in care, non-chronic conditions are more likely to be coded at the time the illnesses arises.
 
-![Non-Chronic Condition Predictions](eval_non_chronic.png "Non-Chronic Condition Predictions")\
+![Non-Chronic Condition Predictions](eval_non_chronic.png "Non-Chronic Condition Predictions")
 
 For both the chronic and non-chronic conditions, the recommender model consistently outperforms the popularity model.
 
@@ -100,15 +100,15 @@ Below we will examine model inputs and model results for a sample patient with d
 
 The table below shows the input features and their respective confidence values. Demographic features are given a constant confidence value, whereas the confidence values for condition features are a factor of the patient medical history.
 
-![Diabetes Member Features](Member_1_features.png "Diabetes Member Features")\
+![Diabetes Patient Features](Member_1_features.png "Diabetes Patient Features")
 
 The table below shows the top ten recommendations and their relative rating for this patient. The ratings are determined through a recombination of latent factors for the patient and the respective condition.
 
-![Diabetes Member Predictions](Member_1_predictions.png "Diabetes Member Predictions")\
+![Diabetes Patient Predictions](Member_1_predictions.png "Diabetes Patient Predictions")
 
 The table below breaks down the relative contribution for the top recommended condition, thyroid disorders. A recommendation's rating can be decomposed into contributions from each of the input features, based on the feature's confidence value and latent factors.
 
-![Diabetes Member Explanations](Member_1_explanations.png "Diabetes Member Explanations")\
+![Diabetes Patient Explanations](Member_1_explanations.png "Diabetes Patient Explanations")
 
 The demographic features have a high contribution to the recommendation, partially due to the high confidence value associated with these features. Hypertension and diabetes are other strong contributing factors. Male gender appears to be slightly negatively associated with thyroid disorders.
 
