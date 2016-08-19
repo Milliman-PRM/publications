@@ -44,9 +44,21 @@ Patient 1 appears to be most similar to Patient 2. Thus, for Patient 1, we would
 
 The preference inputs in recommender systems may take two forms: explicit ratings or implicit ratings. Explicit ratings are generated when the users themselves identify their preference, such as giving a rating to a movie or a product. While explicit ratings carry a higher level of confidence for a user's preference, they are often not available. More commonly, implicit ratings are inferred from a user's actions, such as viewing a movie or buying a product.
 
-Our implementation utilizes an implicit rating, matrix-factorization model to predict uncoded conditions. Each patient is a "user", with conditions being recommended as the "items". Implicit condition confidence values, or ratings, are inferred from the medical history of each patient in a population. These user, condition, and confidence inputs are applied to generate latent factors for each patient and condition. These latent factors, an abstract representation of similarities between users and conditions, can be combined to generate a predicted rating for each patient-condition pairing. This model has been implemented in Apache Spark, a clustered computing framework.
+Our implementation utilizes an implicit rating, matrix-factorization model to predict uncoded conditions. Each patient is a "user", with conditions being recommended as the "items". Implicit condition confidence values, or ratings, are inferred from the medical history of each patient in a population. These user, condition, and confidence inputs are processed to generate latent factors for each patient and condition. These latent factors, an abstract representation of similarities between users and conditions, can be combined to generate a predicted rating for each patient-condition pairing.
 
-A matrix factorization recommender system is fast and simple to train, and thus can realistically be tuned to find unique relationships for each patient population. It works well with the sparse nature of patient condition information (e.g. most patients only have a handful of conditions). A recommender system is more patient-focused, and seeks to find top recommendations that are tailored to each patient's unique history. Finally, the comorbid nature of many conditions can be naturally expressed via latent factors (e.g. a latent factor related to cardiovascular disease can usefully explain many conditions).
+The example below illustrates using the estimated latent factors to generate recommendations for a single patient.
+
+|Latent Factor|Patient|Diabetes|Hypertension|Asthma|Menopause|
+|---|---|---|---|---|---|
+|1|0.8|0.2|0.3|0.1|-1.0|
+|2|0.4|0.6|0.8|0.1|0.1|
+|3|-0.5|0.1|-0.1|-0.1|0.1|
+|4|0.6|-0.2|0.2|0.5|-0.1|
+|**Rating**|**---**|**0.23**|**0.73**|**0.47**|**-0.87**|
+
+A condition's rating for a given patient is calculated as the dot product of the patient's latent factors and the respective condition's latent factors (e.g. Diabetes Rating = 0.8x0.2 + 0.4x0.6 + -0.5*0.1 + 0.6*-0.2). Here, we would recommend hypertension as the most likely uncoded condition. While latent factors are not easily interpretable, we could roughly associate each latent factor with a patient characteristic. Latent factor 1 is likely gender-related, due to the high coefficient for menopause. Latent factor 2 may be related to blood pressure, considering the high coefficients of both diabetes and hypertension, while latent factor 4 may be related to lung issues.  Most real matrix factorization models use so many latent factors it would not be reasonable to try and actually attach interpretations to them.
+
+We are using matrix factorization because is fast and simple to train, and thus can realistically be tuned to find unique relationships for each patient population. We utilized Apache Spark, a clustered computing framework, for implementation to get additional speed by distributing the calculations. Matrix factorization works well with the sparse nature of patient condition information (e.g. most patients only have a handful of conditions). Finally, the comorbid nature of many conditions can be naturally expressed via latent factors (e.g. a latent factor related to cardiovascular disease can usefully explain many conditions).
 
 ## Feature Engineering
 
@@ -63,18 +75,6 @@ The two most important hyper-parameters are lambda, the regularization parameter
 We want to determine what hyper-parameter values are useful for predicting uncoded conditions. To accomplish this, we create a tuning dataset which excludes the most recent months of data. The hold-out data is analyzed to find conditions coded for the first time in a patient's medical history. We trained a variety of models on the tuning dataset with different hyper-parameter values.  For each model we calculate what percentage of the newly manifested conditions were predicted in each patient's top ten recommendations. We then took the best performing hyper-parameter values and used them to train a final model on all of the available data to make our final recommendations.
 
 This whole tuning process is fast enough to be reasonably done every time we need to calculate recommendations.
-
-The hypothetical example below illustrates the process of using latent factors to determine predicted ratings. For simplicity, we will assume a model rank of four, with only four conditions being considered.
-
-|Latent Factor|Patient|Diabetes|Hypertension|Asthma|Menopause|
-|---|---|---|---|---|---|
-|1|0.8|0.2|0.3|0.1|-1.0|
-|2|0.4|0.6|0.8|0.1|0.1|
-|3|-0.5|0.1|-0.1|-0.1|0.1|
-|4|0.6|-0.2|0.2|0.5|-0.1|
-|**Rating**|**---**|**0.25**|**0.73**|**0.47**|**-0.87**|
-
-A condition's rating is calculated as the dot product of the patient's latent factors and the respective condition's latent factors. Here, we would recommend hypertension as the most likely uncoded condition. While latent factors are not easily interpretable, we can roughly associate each latent factor with a patient characteristic. Latent factor 1 is likely gender-related, due to the high coefficient for menopause. Latent factor 2 may be related to blood pressure, considering the high coefficients of both diabetes and hypertension, while latent factor 4 may be related to lung issues.
 
 ## Model Performance
 
