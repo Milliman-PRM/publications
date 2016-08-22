@@ -62,7 +62,7 @@ We are using matrix factorization because is fast and simple to train, and thus 
 
 ## Feature Engineering
 
-There are two important considerations for generating useful input data: which features will be used, and how will confidence values for these for these features be determined. Our features are a combination of historical condition information and demographic information. These features and their confidence values are generated from a patient population's clinical history.
+There are two important considerations for generating useful input data: which features will be used, and how will confidence values for these features be determined. Our features are a combination of historical condition information and demographic information. These features and their confidence values are generated from a patient population's clinical history.
 
 For condition features, diagnoses in a patient's clinical history are grouped into clinically meaningful categories, or conditions, using the Agency for Healthcare Research and Quality's (AHRQ's) Clinical Classifications Software (CCS). Patients who are seen for the same condition multiple times are given a higher confidence value. More confidence is given for conditions that have been coded more recently. Additionally, more confidence is given for conditions that were coded in an inpatient setting, rather than an outpatient setting.
 
