@@ -1,26 +1,28 @@
-#' ## Code Owners: Ben Copeland
+#' ## Code Owners: Ben Copeland, Shea Parkes
 #' ### OWNERS ATTEST TO THE FOLLOWING:
 #'   * The `master` branch will meet Milliman QRM standards at all times.
 #'   * Deliveries will only be made from code in the `master` branch.
 #'   * Review/Collaboration notes will be captured in Pull Requests (prior to merging).
-#' 
-#' 
+#'
+#'
 #' ### Objective:
 #'   * Make some pretty graphs for recommender model evaluation
-#' 
+#'
 #' ### Developer Notes:
 #'   * <What future developers need to know.>
 
 # load our packages
 options(repos=structure(c(CRAN="http://cran.rstudio.com/")))
 require(splines)
+require(dplyr)
+require(magrittr)
 require(ggplot2)
 require(scales)
 require(RColorBrewer)
 require(mgcv)
 require(grid)
 require(ifultools)
-require(sparkR)
+require(SparkR)
 
 #' Call the R parser to include the meta parameters
 source(paste(c(
@@ -40,57 +42,54 @@ sq <- sparkRSQL.init(sc)
 # load parquet file into a Spark data frame and coerce into R data frame
 df <- collect(read.parquet(sq, paste0(dir.data, 'model_evaluation')))
 
-plot.skel.chronic <- ggplot(
-    df[df$chronic_flag == '1',]
+plot.skel <- df %>%
+  mutate(
+    chronic_pretty = factor(
+      chronic_flag
+      ,levels=c(1, 0)
+      ,labels=c('Chronic', 'Non-Chronic')
     )
+    ,pred_type_pretty = factor(
+      pred_type
+      ,levels=c('recommender', 'popular')
+      ,labels=c('Matrix\nFactorizaiton', 'Popularity')
+    )
+  ) %>%
+  ggplot()
 
-plot.chronic <- plot.skel.chronic + geom_point(
+plot.facet <- plot.skel + geom_point(
     alpha=1
-    ,aes(x=pred_rank,y=cumul_pred, color=pred_type)
-  ) + theme_bw() + scale_color_brewer(palette="Set1") + geom_line(
-    aes(x=pred_rank,y=cumul_pred, color=pred_type)
-  ) + scale_x_continuous(name='\nPrediction Rank', labels=seq(15), breaks=seq(15)) + 
-  scale_y_continuous(name='Cumulative Percent\nPredicted\n', labels=seq(0,1,0.1),breaks=seq(0,1,0.1)) +
-  labs(color='Model Type') + guides(guides='None') + theme(
-      panel.border = element_blank()
-      ,panel.grid.major = element_blank()
-      ,panel.grid.minor = element_blank()
-      ,axis.line = element_line(colour = "black")
-  ) + ggtitle('Prediction Accuracy,\nChronic Conditions')
-plot.chronic
+    ,aes(x=pred_rank,y=cumul_pred, color=pred_type_pretty)
+  ) +
+  facet_wrap(~chronic_pretty) +
+  theme_bw() +
+  scale_color_brewer(palette="Set1") +
+  geom_line(
+    aes(x=pred_rank,y=cumul_pred, color=pred_type_pretty)
+  ) +
+  scale_x_continuous(name='\nNumber of recommendations per patient', breaks=c(1,5,10,15)) +
+  scale_y_continuous(name='Percent of new conditions\ncaptured in recommendations\n', labels=percent,breaks=seq(0,1,0.1), limits=c(0,0.7)) +
+  labs(color='Model Type') +
+  theme(
+      #panel.border = element_blank()
+      #panel.grid.major = element_blank()
+      #panel.grid.minor = element_blank()
+      axis.line = element_line(colour = "black")
+  ) +
+  ggtitle('Recommendation accuracy\non two month hold-out')+
+  coord_cartesian(ylim=c(0,0.73))
+plot.facet
 
-plot.skel.non.chronic <- ggplot(
-  df[df$chronic_flag == '0',]
-)
-
-plot.non.chronic <- plot.skel.non.chronic + geom_point(
-  alpha=1
-  ,aes(x=pred_rank,y=cumul_pred, color=pred_type)
-) + theme_bw() + scale_color_brewer(palette="Set1") + geom_line(
-  aes(x=pred_rank,y=cumul_pred, color=pred_type)
-) + scale_x_continuous(name='\nPrediction Rank', labels=seq(15), breaks=seq(15)) + 
-  scale_y_continuous(name='Cumulative Percent\nPredicted\n', labels=seq(0,1,0.1),breaks=seq(0,1,0.1)) +
-  labs(color='Model Type') + guides(guides='None') + theme(
-    panel.border = element_blank()
-    ,panel.grid.major = element_blank()
-    ,panel.grid.minor = element_blank()
-    ,axis.line = element_line(colour = "black")
-  ) + ggtitle('Prediction Accuracy,\nNon-Chronic Conditions')
-plot.non.chronic
 
 ggsave(
-  paste0('eval_chronic.png')
-  ,plot.chronic
+  paste0('eval_facet.png')
+  ,plot.facet
   ,type='cairo-png'
   ,scale=.8
+  ,width=12
+  ,height=8
 )
 
-ggsave(
-  paste0('eval_non_chronic.png')
-  ,plot.non.chronic
-  ,type='cairo-png'
-  ,scale=.8
-)
 
 
 # terminate Spark session
