@@ -80,17 +80,11 @@ This whole tuning process is fast enough to be reasonably done every time we nee
 
 When using any advanced analytics, it is always important to have a useful baseline model to compare against.  For a recommender model, the most basic reference model would be a simple *popularity* model that recommends the population's most common conditions, excluding conditions that have already been coded for a patient. For example, a popularity model would recommend the most common condition, such as hypertension, as the first recommendation for all patients that do not already have hypertension coded.
 
-The illustrations below compare prediction accuracy on a sample population for our recommender model versus the simpler popularity model. The vertical axis shows the estimate of accuracy discussed above: the percentage of newly manifested conditions from the hold-out set that were in the top N recommendations for each patient.  The horizontal axis displays the results for different numbers of recommendations for each patient.
+The illustration below compares prediction accuracy on a sample population for our recommender model ("Matrix Factorization") versus the simpler "Popularity" model. The vertical axis shows the estimate of accuracy discussed above: the percentage of newly manifested conditions from the hold-out set that were in the top N recommendations for each patient.  The horizontal axis displays the results for different numbers of recommendations for each patient.
 
-The first image focuses on chronic conditions, as these conditions are more likely to go uncoded if they are not the primary reason that a patient seeks care.
+![Recommendation Accuracy](eval_facet.png "Recommendation Accuracy")
 
-![Chronic Condition Predictions](eval_chronic.png "Chronic Condition Predictions")
-
-The next image focuses on non-chronic conditions. Because of the higher intensity level required in care, non-chronic conditions are more likely to be coded at the time the illnesses arise.
-
-![Non-Chronic Condition Predictions](eval_non_chronic.png "Non-Chronic Condition Predictions")
-
-For both the chronic and non-chronic conditions, the recommender model consistently outperforms the popularity model.
+The left side focuses on chronic conditions, as these conditions are more likely to go uncoded if they are not the primary reason that a patient seeks care.  The right side focuses on non-chronic conditions. Because of the higher intensity level required in care, non-chronic conditions are more likely to be coded at the time the illnesses arise.  For both the chronic and non-chronic conditions, the matrix factorization model consistently outperforms the popularity model.
 
 ## Case Study
 

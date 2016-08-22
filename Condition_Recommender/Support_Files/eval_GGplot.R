@@ -85,11 +85,19 @@ ggsave(
   paste0('eval_facet.png')
   ,plot.facet
   ,type='cairo-png'
-  ,scale=.8
+  ,scale=1.1
+  ,width=6
+  ,height=4
+)
+
+ggsave(
+  paste0('eval_facet_presentation.png')
+  ,plot.facet
+  ,type='cairo-png'
+  ,scale=.75
   ,width=12
   ,height=8
 )
-
 
 
 # terminate Spark session
