@@ -84,7 +84,7 @@ The illustration below compares prediction accuracy on a sample population for o
 
 ![Recommendation Accuracy](eval_facet.png "Recommendation Accuracy")
 
-The left side focuses on chronic conditions, as these conditions are more likely to go uncoded if they are not the primary reason that a patient seeks care.  The right side focuses on non-chronic conditions. Because of the higher intensity level required in care, non-chronic conditions are more likely to be coded at the time the illnesses arise.  For both the chronic and non-chronic conditions, the matrix factorization model consistently outperforms the popularity model.
+The left side focuses on chronic conditions, which are more likely to go uncoded if they are not the primary reason that a patient seeks care.  The right side focuses on non-chronic conditions. Because of the higher intensity level required in care, non-chronic conditions are more likely to be coded at the time the illnesses arise.  For both the chronic and non-chronic conditions, the matrix factorization model consistently outperforms the popularity model.
 
 ## Case Study
 
