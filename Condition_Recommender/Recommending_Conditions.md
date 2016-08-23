@@ -74,13 +74,13 @@ The two most important hyper-parameters are lambda, the regularization parameter
 
 We want to determine the hyper-parameter values that are most useful for predicting uncoded conditions. To accomplish this, we create a tuning dataset which excludes the most recent months of data. The hold-out data is analyzed to find conditions coded for the first time in a patient's medical history. We trained a variety of models on the tuning dataset with different hyper-parameter values.  For each model, we use the hold-out data to calculate the percentage of newly coded conditions predicted in each patient's top ten recommendations. Using the best performing hyper-parameter values, we then train a final model with all of the available data to make our recommendations.
 
-This whole tuning process is fast enough to be reasonably done every time we need to calculate recommendations.
+This whole tuning process is fast enough to find optimal hyper-parameters for each unique patient population.
 
 ## Model Performance
 
 When using any advanced analytics, it is always important to have a useful baseline model to compare against.  For a recommender model, the most basic reference model would be a simple *popularity* model that recommends the population's most common conditions, excluding conditions that have already been coded for a patient. For example, a popularity model would recommend the most common condition, such as hypertension, as the first recommendation for all patients that do not already have hypertension coded.
 
-The illustration below compares prediction accuracy on a sample population for our recommender model ("Matrix Factorization") versus the simpler "Popularity" model. The vertical axis shows the estimate of accuracy discussed above: the percentage of newly manifested conditions from the hold-out set that were in the top N recommendations for each patient.  The horizontal axis displays the results for different numbers of recommendations for each patient.
+The illustration below compares prediction accuracy on a sample population for our recommender model ("Matrix Factorization") versus the simpler "Popularity" model. The vertical axis shows the estimate of accuracy discussed above: the percentage of newly coded conditions from the hold-out set that were in the top N recommendations for each patient.  The horizontal axis displays the results for different numbers of recommendations for each patient.
 
 ![Recommendation Accuracy](eval_facet.png "Recommendation Accuracy")
 
