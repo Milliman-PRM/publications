@@ -74,7 +74,7 @@ The two most important hyper-parameters are lambda, the regularization parameter
 
 We want to determine the hyper-parameter values that are most useful for predicting uncoded conditions. To accomplish this, we create a tuning dataset which excludes the most recent months of data. The hold-out data is analyzed to find conditions coded for the first time in a patient's medical history. We trained a variety of models on the tuning dataset with different hyper-parameter values.  For each model, we use the hold-out data to calculate the percentage of newly coded conditions predicted in each patient's top ten recommendations. Using the best performing hyper-parameter values, we then train a final model with all of the available data to make our recommendations.
 
-This whole tuning process is fast enough to find optimal hyper-parameters for each unique patient population.
+This whole tuning process is fast enough to calibrate hyper-parameters for each unique patient population.
 
 ## Model Performance
 
