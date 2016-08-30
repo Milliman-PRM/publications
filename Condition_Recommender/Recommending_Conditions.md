@@ -1,9 +1,9 @@
 
-# Milliman PRM Analytics
+# Recommending uncoded conditions
 
 ----------
 
-## Recommending uncoded conditions
+## Background
 
 Recent trends in healthcare legislation have led to a rise in risk-bearing healthcare provider organizations, such as accountable care organizations (ACOs). Entrusted with the care of thousands of patients, these organizations must leverage data-driven approaches to population health management in order to improve quality of care and reduce costs.
 
@@ -13,7 +13,7 @@ However, there are also financial incentives in coding improvement. Alternative 
 
 Coding improvement initiatives often start by looking through a given patient's records for explicit evidence of conditions that did not make it into the official diagnosis information: conditions coded on claims in prior years, or mentioned in the unstructured text of an electronic medical record.  After these explicit sources of coding improvement are exhausted, more advanced methods can try to suggest conditions that have never appeared on a patient's medical history. One approach can be to find explicit evidence of missed codings in large reference data sets and train predictive models that can be then be applied to other, potentially slimmer sources. This can work well for predicting specific chronic conditions in a population, even when only a short claims history is available.
 
-At Milliman PRM Analytics, we have taken a different approach to identifying uncoded conditions through the use of a recommender system. Our recommender system seeks to identify common clinical patterns among patients in a population; we then make patient-level condition recommendations based upon comorbities experienced by similar patients.  The recommender approach works well at giving personalized recommendations from the patient perspective.
+We have taken a different approach to identifying uncoded conditions through the use of a recommender system. Our recommender system seeks to identify common clinical patterns among patients in a population; we then make patient-level condition recommendations based upon comorbities experienced by similar patients.  The recommender approach works well at giving personalized recommendations from the patient perspective.
 
 
 ## What is a recommender system?
