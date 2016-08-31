@@ -114,7 +114,7 @@ The table in Figure 6 shows the top 10 recommendations and their relative rating
 
 The table in Figure 7 breaks down the relative contribution for the top recommended condition, thyroid disorders. A recommendation's rating can be decomposed into contributions from each of the input features, based on the feature's confidence value and latent factors.
 
-**Figure 7: Contributin Features, Thyroid Disorders**
+**Figure 7: Contributing Features, Thyroid Disorders**
 
 ![Diabetes Patient Explanations](Member_1_explanations.png "Diabetes Patient Explanations")
 
