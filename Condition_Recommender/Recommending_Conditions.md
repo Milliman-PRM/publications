@@ -78,19 +78,19 @@ The two main demographic features are age and gender. Unlike condition features,
 
 The two most important hyper-parameters are lambda, the regularization parameter, and rank, the number of latent factors. Lambda should be strong enough to avoid overfitting in the training data, while also still allowing for meaningful personalization in predictions. Rank must be high enough to allow for meaningful groupings in latent factors, while avoiding the computational burden of higher rank models.
 
-We want to determine the hyper-parameter values that are most useful for predicting uncoded conditions. To accomplish this, we create a tuning data set that excludes the most recent months of data. The hold-out data is analyzed to find conditions coded for the first time in a patient's medical history. We trained a variety of models on the tuning dataset with different hyper-parameter values.  For each model, we use the hold-out data to calculate the percentage of newly coded conditions predicted in each patient's top 10 recommendations. Using the best performing hyper-parameter values, we then train a final model with all of the available data to make our recommendations.
+We want to determine the hyper-parameter values that are most useful for identifying uncoded comorbidities. To accomplish this, we create a tuning data set that excludes the most recent months of data. The hold-out data is analyzed to find conditions coded for the first time in a patient's medical history. We trained a variety of models on the tuning dataset with different hyper-parameter values.  For each model, we use the hold-out data to calculate the percentage of newly coded conditions appearing in each patient's 10 highest-rated uncoded conditions. Using the best performing hyper-parameter values, we then train a final model with all of the available data to make our patient-level lists of the highest-rated conditions to consider.
 
 This whole tuning process is fast enough to calibrate hyper-parameters for each unique patient population.
 
 ## Model performance
 
-When using any advanced analytics, it is always important to have a useful baseline model to compare against.  For a recommender model, the most basic reference model would be a simple *popularity* model that recommends the population's most common conditions, excluding conditions that have already been coded for a patient. For example, a popularity model would recommend the most common condition, such as hypertension, as the first recommendation for all patients that do not already have hypertension coded.
+When using any advanced analytics, it is always important to have a useful baseline model to compare against.  For a collaborative filtering model, the most basic reference model would be a simple *popularity* model that identifies the population's most common conditions, excluding conditions that have already been coded for a patient. For example, a popularity model would identify the most common condition, such as hypertension, as the highest-rated condition to consider for all patients that do not already have hypertension coded.
 
-The illustration in Figure 4 compares prediction accuracy on a sample population for our recommender model ("Matrix Factorization") versus the simpler "Popularity" model. The vertical axis shows the estimate of accuracy discussed above: the percentage of newly coded conditions from the hold-out set that were in the top *N* recommendations for each patient.  The horizontal axis displays the results for different numbers of recommendations for each patient.
+The illustration in Figure 4 compares model accuracy on a sample population for our recommender model ("Matrix Factorization") versus the simpler "Popularity" model. The vertical axis shows the estimate of accuracy discussed above: the percentage of newly coded conditions from the hold-out set that were among the highest-rated uncoded conditions for each patient.  The horizontal axis displays accuracy for a different number of top *N* highest-rated uncoded conditions.
 
-**Figure 4: Recommendation Accuracy on Two-Month Hold-Out**
+**Figure 4: Model Accuracy on Two-Month Hold-Out**
 
-![Recommendation Accuracy](eval_facet.png "Recommendation Accuracy")
+![Model Accuracy](eval_facet.png "Model Accuracy")
 
 The left side focuses on chronic conditions, which are more likely to go uncoded if they are not the primary reason that a patient seeks care.  The right side focuses on non-chronic conditions. Because of the higher intensity level required in care, non-chronic conditions are more likely to be coded at the time the illnesses arise.  For both the chronic and non-chronic conditions, the matrix factorization model consistently outperforms the popularity model.
 
