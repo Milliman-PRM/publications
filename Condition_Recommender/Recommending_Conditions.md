@@ -13,16 +13,16 @@ However, there can be financial incentives in coding improvement. Alternative pa
 
 Coding improvement initiatives often start by looking through a given patient's records for explicit evidence of conditions that did not make it into the official diagnosis information: conditions coded on claims in prior years, or mentioned in the unstructured text of an electronic medical record.  After these explicit sources of coding improvement are exhausted, more advanced methods can evaluate a patient for likely comorbidities that may not have been coded. One approach is to find explicit evidence of missed codings in large reference data sets and train predictive models that can be then be applied to other, potentially slimmer sources. This can work well for predicting specific chronic conditions in a population, even when only a short claims history is available.
 
-We have taken a different approach to identifying uncoded conditions through the use of a collaborative filtering system. Our implementation seeks to identify common clinical patterns among patients in a population; we then make patient-level lists of conditions to consider based upon comorbidities experienced by similar patients.  The collaborative filtering approach works well at giving personalized recommendations from the patient perspective.
+We have taken a different approach to identifying uncoded conditions through the use of a collaborative filtering system. Our implementation seeks to identify common clinical patterns among patients in a population; we then make patient-level lists of conditions to review based upon comorbidities experienced by similar patients. The collaborative filtering approach works well at giving personalized recommendations from the patient perspective.
 
 
-## What is a recommender system?
+## What is a collaborative filtering system?
 
-If you have ever viewed a product on Amazon or watched a show on Netflix, then you have been a part of a recommender system. Recommender systems are commonly used to help users identify potentially interesting products among a large list of options, through the use of historical viewing or rating information. For example, Netflix will recommend certain shows to you based on your previous viewings. These recommendations are built using viewing or rating data from other users who have viewed the same shows as you.
+If you have ever viewed a product on Amazon or watched a show on Netflix, then you have been a part of a collaborative filtering system, also known as a recommender system. Collaborative filtering systems are commonly applied to help users identify potentially interesting products among a large list of options, through the use of historical viewing or rating information. For example, Netflix will recommend certain shows to you based on your previous viewings. These recommendations are built using viewing or rating data from other users who have viewed the same shows as you.
 
-A common model training process for recommender systems is collaborative filtering, which uses historical rating data to find similarities among users or items. Collaborative filtering often takes three forms: user-based, item-based, or matrix factorization. User-based collaborative filtering seeks to find users that have rated items similarly, and predict other items that similar users liked. Item-based collaborative filtering seeks to find similarities among items themselves, and then recommend items that are similar to a user's highly rated items. Matrix factorization estimates latent factors for each user and item and then uses these latent factors to find items that hopefully align with a user's preferences.
+Collaborative filtering often takes three forms: user-based, item-based, or matrix factorization. User-based collaborative filtering seeks to find users that have rated items similarly, and predict preferences for other items that similar users liked. Item-based collaborative filtering seeks to find similarities among items themselves, and then suggest items that are similar to a user's highly rated items. Matrix factorization estimates latent factors for each user and item and then uses these latent factors to find items that hopefully align with a user's preferences.
 
-For an illustration of collaborative filtering, consider the example patient panel in Figure 1.
+For an illustration of collaborative filtering in a clinical setting, consider the hypothetical patient panel in Figure 1.
 
 **Figure 1: Example Patient Panel**
 
@@ -31,12 +31,12 @@ For an illustration of collaborative filtering, consider the example patient pan
 |Diabetes|X|X|||
 |Hypertension|X|X|||
 |Asthma|||X||
-|COPD||X|X|X|
+|Hyperlipidemia||X|X|X|
 |Back Pain|||X|X|
 
-Patient 1 appears to be most similar to Patient 2. Thus, for Patient 1, we would predict that COPD is the most likely uncoded condition. Likewise, Patient 4 is most similar to Patient 3, so we would assume that asthma is the most likely uncoded condition for Patient 4.
+Patient 1 appears to be most similar to Patient 2. Thus, for Patient 1, hyperlipidemia might be considered as a potential comorbidity. Likewise, Patient 4 is most similar to Patient 3, so asthma might be considered as a potential comorbidity.
 
-**Figure 2: Example Patient Panel, Recommended Conditions**
+**Figure 2: Example Patient Panel, Conditions to Consider**
 
 |Condition|Patient 1|Patient 2|Patient 3|Patient 4|
 |---|---|---|---|---|
@@ -46,13 +46,13 @@ Patient 1 appears to be most similar to Patient 2. Thus, for Patient 1, we would
 |COPD|O|X|X|X|
 |Back Pain|||X|X|
 
-The preference inputs in recommender systems may take two forms: explicit ratings or implicit ratings. Explicit ratings are generated when the users themselves identify their preferences, such as giving a rating to a movie or a product. While explicit ratings carry a higher level of confidence for a user's preference, they are often not available. More commonly, implicit ratings are inferred from a user's actions, such as viewing a movie or buying a product.
+The preference inputs in collaborative filtering may take two forms: explicit ratings or implicit ratings. Explicit ratings are generated when the users themselves identify their preferences, such as giving a rating to a movie or a product. While explicit ratings carry a higher level of confidence for a user's preference, they are often not available. More commonly, implicit ratings are inferred from a user's actions, such as viewing a movie or buying a product.
 
-Our implementation utilizes an implicit rating, matrix-factorization model to predict uncoded conditions. Each patient is a "user," with conditions being recommended as the "items." Implicit condition confidence values, or ratings, are inferred from the medical history of each patient in a population. These user, condition, and confidence inputs are processed to generate latent factors for each patient and condition. These latent factors, an abstract representation of similarities among users and conditions, can be combined to generate a predicted rating for each patient-condition pairing.
+Our implementation utilizes an implicit rating, matrix-factorization model to identify suggestions of uncoded conditions. Each patient is a "user," with potential comorbid conditions being suggested as the "items." Implicit condition confidence values, or ratings, are inferred from the medical history of each patient in a population. These user, condition, and confidence inputs are processed to generate latent factors for each patient and condition. These latent factors, an abstract representation of similarities among users and conditions, can be combined to generate a rating for each patient-condition pairing.
 
-The example in Figure 3 illustrates using the estimated latent factors to generate recommendations for a single patient.
+The hypothetical example in Figure 3 illustrates using the estimated latent factors to generate condition ratings for a single patient.
 
-**Figure 3: Recommendations Based on Estimated Latent Factors**
+**Figure 3: Condition Ratings Based on Estimated Latent Factors**
 
 |Latent Factor|Patient|Diabetes|Hypertension|Asthma|Menopause|
 |:---|---:|---:|---:|---:|---:|
@@ -62,7 +62,7 @@ The example in Figure 3 illustrates using the estimated latent factors to genera
 |4|0.6|-0.2|0.2|0.5|-0.1|
 |**Patient Rating**|**---**|**0.23**|**0.73**|**0.47**|**-0.87**|
 
-A condition's rating for a given patient is calculated as the dot product of the patient's latent factors and the respective condition's latent factors (e.g., Diabetes Rating = 0.8x0.2 + 0.4x0.6 + -0.5x0.1 + 0.6x-0.2). Here, we would recommend hypertension as the most likely uncoded condition. While latent factors are not easily interpretable, we could roughly associate each latent factor with a patient characteristic. Latent factor 1 is likely gender-related because it has a strong coefficient for menopause. Latent factor 2 may be related to blood pressure, considering the high coefficients of both diabetes and hypertension, while latent factor 4 may be related to lung issues.  Most real matrix factorization models use so many latent factors it would not be reasonable to try to actually attach interpretations to them.
+A condition's rating for a given patient is calculated as the dot product of the patient's latent factors and the respective condition's latent factors (e.g., Diabetes Rating = 0.8x0.2 + 0.4x0.6 + -0.5x0.1 + 0.6x-0.2). Here, we would identify hypertension as the strongest consideration of a potential comorbidity. While latent factors are not easily interpretable, we could roughly associate each latent factor with a patient characteristic. Latent factor 1 could be gender-related because it has a strong coefficient for menopause. Latent factor 2 may be related to blood pressure, considering the high coefficients of both diabetes and hypertension, while latent factor 4 may be related to lung issues.  Most real matrix factorization models use so many latent factors it would not be reasonable to try to actually attach interpretations to them.
 
 A matrix factorization approach provides some useful benefits. The model is fast and simple to train, and thus can realistically be tuned to find unique relationships for each patient population. We utilized an implementation in Apache Spark, a clustered computing framework, to gain additional speed by distributing the calculations. Matrix factorization works well with the sparse nature of patient condition information (e.g., most patients only have a handful of conditions). Finally, the comorbid nature of many conditions can be naturally expressed via latent factors (e.g., a latent factor related to cardiovascular disease can usefully explain many conditions).
 
