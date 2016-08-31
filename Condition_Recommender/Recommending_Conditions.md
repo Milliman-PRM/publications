@@ -1,5 +1,5 @@
 
-# Recommending uncoded conditions
+# Considering uncoded conditions
 
 ----------
 
@@ -9,11 +9,11 @@ Recent trends in healthcare legislation have led to a rise in risk-bearing healt
 
 One area of concern for data-driven analysis involves the accuracy of a patient's clinical documentation. Efforts to improve accuracy in a population's clinical records are often referred to as clinical documentation improvement or coding improvement. From a clinical standpoint, the benefit from coding improvement is obvious. A patient record that contains the entirety of the patient's illnesses will result in a more appropriate treatment plan.
 
-However, there are also financial incentives in coding improvement. Alternative payment models often account for the health status of a patient population, through the use of risk scores, when reimbursing a healthcare provider for services. A more accurate clinical record ensures that risk-bearing healthcare providers are appropriately compensated when they care for sicker populations.
+However, there can be financial incentives in coding improvement. Alternative payment models often account for the health status of a patient population, through the use of risk scores, when reimbursing a healthcare provider for services. A more accurate clinical record ensures that risk-bearing healthcare providers are appropriately compensated when they care for sicker or healthier populations.
 
-Coding improvement initiatives often start by looking through a given patient's records for explicit evidence of conditions that did not make it into the official diagnosis information: conditions coded on claims in prior years, or mentioned in the unstructured text of an electronic medical record.  After these explicit sources of coding improvement are exhausted, more advanced methods can try to suggest conditions that have never appeared on a patient's medical history. One approach can be to find explicit evidence of missed codings in large reference data sets and train predictive models that can be then be applied to other, potentially slimmer sources. This can work well for predicting specific chronic conditions in a population, even when only a short claims history is available.
+Coding improvement initiatives often start by looking through a given patient's records for explicit evidence of conditions that did not make it into the official diagnosis information: conditions coded on claims in prior years, or mentioned in the unstructured text of an electronic medical record.  After these explicit sources of coding improvement are exhausted, more advanced methods can evaluate a patient for likely comorbidities that may not have been coded. One approach is to find explicit evidence of missed codings in large reference data sets and train predictive models that can be then be applied to other, potentially slimmer sources. This can work well for predicting specific chronic conditions in a population, even when only a short claims history is available.
 
-We have taken a different approach to identifying uncoded conditions through the use of a recommender system. Our recommender system seeks to identify common clinical patterns among patients in a population; we then make patient-level condition recommendations based upon comorbities experienced by similar patients.  The recommender approach works well at giving personalized recommendations from the patient perspective.
+We have taken a different approach to identifying uncoded conditions through the use of a collaborative filtering system. Our implementation seeks to identify common clinical patterns among patients in a population; we then make patient-level lists of conditions to consider based upon comorbidities experienced by similar patients.  The collaborative filtering approach works well at giving personalized recommendations from the patient perspective.
 
 
 ## What is a recommender system?
