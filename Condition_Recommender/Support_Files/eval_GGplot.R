@@ -67,8 +67,8 @@ plot.facet <- plot.skel + geom_point(
   geom_line(
     aes(x=pred_rank,y=cumul_pred, color=pred_type_pretty)
   ) +
-  scale_x_continuous(name='\nNumber of recommendations per patient', breaks=c(1,5,10,15)) +
-  scale_y_continuous(name='Percent of new conditions\ncaptured in recommendations\n', labels=percent,breaks=seq(0,1,0.1), limits=c(0,0.7)) +
+  scale_x_continuous(name='\nNumber of top-rated\nconditions per patient', breaks=c(1,5,10,15)) +
+  scale_y_continuous(name='Percent of new\nconditions captured', labels=percent,breaks=seq(0,1,0.1), limits=c(0,0.7)) +
   labs(color='Model Type') +
   theme(
       #panel.border = element_blank()
@@ -76,7 +76,7 @@ plot.facet <- plot.skel + geom_point(
       #panel.grid.minor = element_blank()
       axis.line = element_line(colour = "black")
   ) +
-  ggtitle('Recommendation accuracy\non two month hold-out')+
+  ggtitle('Model accuracy\non two month hold-out')+
   coord_cartesian(ylim=c(0,0.73))
 plot.facet
 
