@@ -68,7 +68,7 @@ plot.facet <- plot.skel + geom_point(
     aes(x=pred_rank,y=cumul_pred, color=pred_type_pretty)
   ) +
   scale_x_continuous(name='\nNumber of top-rated\nconditions per patient', breaks=c(1,5,10,15)) +
-  scale_y_continuous(name='Percent of new\nconditions captured', labels=percent,breaks=seq(0,1,0.1), limits=c(0,0.7)) +
+  scale_y_continuous(name='Percent of new\nconditions captured\n', labels=percent,breaks=seq(0,1,0.1), limits=c(0,0.7)) +
   labs(color='Model Type') +
   theme(
       #panel.border = element_blank()
