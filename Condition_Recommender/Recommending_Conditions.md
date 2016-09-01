@@ -86,7 +86,7 @@ This whole tuning process is fast enough to calibrate hyper-parameters for each 
 
 When using any advanced analytics, it is always important to have a useful baseline model to compare against.  For a collaborative filtering model, the most basic reference model would be a simple *popularity* model that identifies the population's most common conditions, excluding conditions that have already been coded for a patient. For example, a popularity model would identify the most common condition, such as hypertension, as the highest-rated condition to consider for all patients that do not already have hypertension coded.
 
-The illustration in Figure 4 compares model accuracy on a sample population for our recommender model ("Matrix Factorization") versus the simpler "Popularity" model. The vertical axis shows the estimate of accuracy discussed above: the percentage of newly coded conditions from the hold-out set that were among the highest-rated uncoded conditions for each patient.  The horizontal axis displays accuracy for a different number of top *N* highest-rated uncoded conditions.
+The illustration in Figure 4 compares model accuracy on a sample population for our collaborative filtering model ("Matrix Factorization") versus the simpler "Popularity" model. The vertical axis shows the estimate of accuracy discussed above: the percentage of newly coded conditions from the hold-out set that were among the highest-rated uncoded conditions for each patient.  The horizontal axis displays accuracy for a different number of top *N* highest-rated uncoded conditions.
 
 **Figure 4: Model Accuracy on Two-Month Hold-Out**
 
@@ -96,7 +96,7 @@ The left side focuses on chronic conditions, which are more likely to go uncoded
 
 ## Case study
 
-Below we will examine model inputs and model results for a sample patient with diabetes. For this patient, we will examine the input features, the top 10 recommendations, and a breakdown of the contribution to the top prediction.
+Below we will examine model inputs and model results for a sample patient with diabetes. For this patient, we will examine the input features, the top 10 highest-rated conditions, and a breakdown of the contribution towards the highest-rated condition.
 
 ### Diabetes patient
 
@@ -106,22 +106,22 @@ The table in Figure 5 shows the input features and their respective confidence v
 
 ![Diabetes Patient Features](Member_1_features.png "Diabetes Patient Features")
 
-The table in Figure 6 shows the top 10 recommendations and their relative ratings for this patient. The ratings are determined through a recombination of latent factors for the patient and the respective condition.
+The table in Figure 6 shows the top 10 highest-rated conditions and their relative ratings for this patient. The ratings are determined through a recombination of latent factors for the patient and the respective condition.
 
-**Figure 6: Recommendations Output**
+**Figure 6: Highest-Rated Conditions**
 
 ![Diabetes Patient Predictions](Member_1_predictions.png "Diabetes Patient Predictions")
 
-The table in Figure 7 breaks down the relative contribution for the top recommended condition, thyroid disorders. A recommendation's rating can be decomposed into contributions from each of the input features, based on the feature's confidence value and latent factors.
+The table in Figure 7 breaks down the relative contribution for the highest-rated condition, thyroid disorders. A condition's rating can be decomposed into contributions from each of the input features, based on the feature's confidence value and latent factors.
 
 **Figure 7: Contributing Features, Thyroid Disorders**
 
 ![Diabetes Patient Explanations](Member_1_explanations.png "Diabetes Patient Explanations")
 
-The demographic features have a high contribution to the recommendation, which is partially due to the high confidence value associated with these features. Hypertension and diabetes are other strong contributing factors. Male gender appears to be slightly negatively associated with thyroid disorders.
+The demographic features have a high contribution to the rating, which is partially due to the high confidence value associated with these features. Hypertension and diabetes are other strong contributing factors. Male gender appears to be slightly negatively associated with thyroid disorders.
 
 ## Conclusion
 
-These recommendations can be used in a number of work-flows. The recommendations could provide a more narrow, manageable focus when investigating medical records retrospectively. Prospectively, these recommendations could be used to remind clinicians of common comorbidities to consider coding at the time of service.
+These conditions to consider can be used in a number of work-flows. Most importantly, these condition lists could be used to remind clinicians of common comorbidities to consider coding at the time of service.
 
-Accurately documenting a patient's clinical status will be increasingly important as more healthcare providers enter into alternative payment arrangements. Provider organizations face a growing scrutiny on the quality and cost of care. As a result, advanced analytics must find their way into daily workflows. Our recommender system provides a unique perspective toward coding improvement that produces useful recommendations of uncoded conditions.
+Accurately documenting a patient's clinical status will be increasingly important as more healthcare providers enter into alternative payment arrangements. Provider organizations face a growing scrutiny on the quality and cost of care. As a result, advanced analytics must find their way into daily workflows. Our collaborative filtering system provides a unique perspective toward coding improvement that produces useful suggestions of uncoded conditions.
