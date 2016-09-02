@@ -86,7 +86,7 @@ This whole tuning process is fast enough to calibrate hyper-parameters for each 
 
 When using any advanced analytics, it is always important to have a useful baseline model to compare against.  For a collaborative filtering model, the most basic reference model would be a simple *popularity* model that identifies the population's most common conditions, excluding conditions that have already been coded for a patient. For example, a popularity model would identify the most common condition, such as hypertension, as the highest-rated condition to consider for all patients that do not already have hypertension coded.
 
-The illustration in Figure 4 compares model accuracy on a sample population for our collaborative filtering model ("Matrix Factorization") versus the simpler "Popularity" model. The vertical axis shows the estimate of accuracy discussed above: the percentage of newly coded conditions from the hold-out set that were among the highest-rated uncoded conditions for each patient.  The horizontal axis displays accuracy for a different number of top *N* highest-rated uncoded conditions.
+The illustration in Figure 4 compares model accuracy on a sample population for our collaborative filtering model ("Matrix Factorization") versus the simpler "Popularity" model. The vertical axis shows the estimate of accuracy discussed above: the percentage of newly coded conditions from the hold-out set that were among the predicted conditions for each patient.  The horizontal axis displays accuracy for different numbers of predicted conditions per patient.
 
 **Figure 4: Model Accuracy on Two-Month Hold-Out**
 
