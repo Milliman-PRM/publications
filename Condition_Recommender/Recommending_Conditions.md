@@ -124,4 +124,6 @@ The demographic features have a high contribution to the rating, which is partia
 
 These lists of potential comorbid conditions can be used in a number of work-flows. Most importantly, these condition lists could be used to remind clinicians of common comorbidities to consider coding at the time of service.
 
+In addition to identifying new conditions, the same model can be used to identify potential outliers in the conditions that have already been coded.  Estimated ratings for existing conditions can be calculated, and those with extremely low values might represent codings that should be reconsidered to ensure there was not perhaps a mistake during data entry.
+
 Accurately documenting a patient's clinical status will be increasingly important as more healthcare providers enter into alternative payment arrangements. Provider organizations face a growing scrutiny on the quality and cost of care. As a result, advanced analytics must find their way into daily workflows. Our collaborative filtering system provides a unique perspective toward coding improvement that produces useful suggestions of uncoded conditions.
