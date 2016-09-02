@@ -1,5 +1,5 @@
 
-# Considering uncoded conditions
+# Collaborative filtering for uncoded conditions
 
 ----------
 
@@ -54,7 +54,7 @@ The hypothetical example in Figure 3 illustrates using the estimated latent fact
 
 **Figure 3: Condition Ratings Based on Estimated Latent Factors**
 
-|Latent Factor|Patient|Diabetes|Hypertension|Asthma|Menopause|
+|Latent Factor|Patient|Diabetes|Hypertension|COPD|Menopause|
 |:---|---:|---:|---:|---:|---:|
 |1|0.8|0.2|0.3|0.1|-1.0|
 |2|0.4|0.6|0.8|0.1|0.1|
