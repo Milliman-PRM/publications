@@ -1,5 +1,5 @@
 
-# Collaborative filtering for uncoded conditions
+# Collaborative filtering for medical conditions
 
 ----------
 
