@@ -11,7 +11,7 @@ One area of concern for data-driven analysis involves the accuracy of a patient'
 
 However, there can be financial incentives in coding improvement. Alternative payment models often account for the health status of a patient population, through the use of risk scores, when reimbursing a healthcare provider for services. A more accurate clinical record ensures that risk-bearing healthcare providers are appropriately compensated when they care for sicker or healthier populations.
 
-Coding improvement initiatives often start by looking through a given patient's records for explicit evidence of conditions that did not make it into the official diagnosis information: conditions coded on claims in prior years, or mentioned in the unstructured text of an electronic medical record.  After these explicit sources of coding improvement are exhausted, more advanced methods can evaluate a patient for likely comorbidities that may not have been coded. One approach is to find explicit evidence of missed codings in large reference data sets and train predictive models that can be then be applied to other, potentially slimmer sources. This can work well for predicting specific chronic conditions in a population, even when only a short claims history is available.
+Coding improvement initiatives often start by looking through a given patient's records for explicit evidence of conditions that did not make it into the official diagnosis information: conditions coded on claims in prior years, or mentioned in the unstructured text of an electronic medical record.  After these explicit sources of coding improvement are exhausted, more analytical methods can evaluate a patient for comorbidities to consider adding (or removing). One approach is to find explicit evidence of missed codings in large reference data sets and train predictive models that can be then be applied to other, potentially slimmer sources. This can work well for predicting specific chronic conditions in a population, even when only a short claims history is available.
 
 We have taken a different approach to identifying uncoded conditions through the use of a collaborative filtering system. Our implementation seeks to identify common clinical patterns among patients in a population; we then make patient-level lists of conditions to review based upon comorbidities experienced by similar patients. The collaborative filtering approach works well at giving personalized lists of potential comorbid conditions from the patient perspective.
 
@@ -54,12 +54,12 @@ The hypothetical example in Figure 3 illustrates using the estimated latent fact
 
 **Figure 3: Condition Ratings Based on Estimated Latent Factors**
 
-|Latent Factor|Patient|Diabetes|Hypertension|COPD|Menopause|
+|Latent Factor|**Patient**|Diabetes|Hypertension|COPD|Menopause|
 |:---|---:|---:|---:|---:|---:|
-|1|0.8|0.2|0.3|0.1|-1.0|
-|2|0.4|0.6|0.8|0.1|0.1|
-|3|-0.5|0.1|-0.1|-0.1|0.1|
-|4|0.6|-0.2|0.2|0.5|-0.1|
+|1|**0.8**|0.2|0.3|0.1|-1.0|
+|2|**0.4**|0.6|0.8|0.1|0.1|
+|3|**-0.5**|0.1|-0.1|-0.1|0.1|
+|4|**0.6**|-0.2|0.2|0.5|-0.1|
 |**Patient Rating**|**---**|**0.23**|**0.73**|**0.47**|**-0.87**|
 
 A condition's rating for a given patient is calculated as the dot product of the patient's latent factors and the respective condition's latent factors (e.g., Diabetes Rating = 0.8x0.2 + 0.4x0.6 + -0.5x0.1 + 0.6x-0.2). Here, we would identify hypertension as the most likely potential comorbidity to consider. While latent factors are not easily interpretable, we could roughly associate each latent factor with a patient characteristic. Latent factor 1 could be gender-related because it has a strong coefficient for menopause. Latent factor 2 may be related to blood pressure, considering the high coefficients of both diabetes and hypertension, while latent factor 4 may be related to lung issues.  Most real matrix factorization models use so many latent factors it would not be reasonable to try to actually attach interpretations to them.
