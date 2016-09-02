@@ -30,11 +30,11 @@ For an illustration of collaborative filtering in a clinical setting, consider t
 |---|---|---|---|---|
 |Diabetes|X|X|||
 |Hypertension|X|X|||
-|Asthma|||X||
+|Coronary Artery Disease|||X||
 |Hyperlipidemia||X|X|X|
-|Back Pain|||X|X|
+|COPD|||X|X|
 
-Patient 1 appears to be most similar to Patient 2. Thus, for Patient 1, hyperlipidemia might be considered as a potential comorbidity. Likewise, Patient 4 is most similar to Patient 3, so asthma might be considered as a potential comorbidity.
+Patient 1 appears to be most similar to Patient 2. Thus, for Patient 1, hyperlipidemia might be considered as a potential comorbidity. Likewise, Patient 4 is most similar to Patient 3, so coronary artery disease might be considered as a potential comorbidity.
 
 **Figure 2: Example Patient Panel, Conditions to Consider**
 
@@ -42,9 +42,9 @@ Patient 1 appears to be most similar to Patient 2. Thus, for Patient 1, hyperlip
 |---|---|---|---|---|
 |Diabetes|X|X|||
 |Hypertension|X|X|||
-|Asthma|||X|O|
-|COPD|O|X|X|X|
-|Back Pain|||X|X|
+|Coronary Artery Disease|||X|O|
+|Hyperlipidemia|O|X|X|X|
+|COPD|||X|X|
 
 The preference inputs in collaborative filtering may take two forms: explicit ratings or implicit ratings. Explicit ratings are generated when the users themselves identify their preferences, such as giving a rating to a movie or a product. While explicit ratings carry a higher level of confidence for a user's preference, they are often not available. More commonly, implicit ratings are inferred from a user's actions, such as viewing a movie or buying a product.
 
