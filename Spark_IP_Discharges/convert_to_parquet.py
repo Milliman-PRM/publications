@@ -8,9 +8,10 @@
   Intended for demo purposes.
 """
 import logging
+from pathlib import Path
 
-import prm.meta.project
 from prm.spark.app import SparkApp
+import prm.spark.io_sas
 
 LOGGER = logging.getLogger(__name__)
 
@@ -22,10 +23,12 @@ LOGGER = logging.getLogger(__name__)
 
 def main() -> int:
     """A function to enclose the execution of business logic."""
-    LOGGER.info('About to do something awesome.')
+    LOGGER.info('Converting existing sas7bdat files to parquet ~files')
     sparkapp = SparkApp('FL_IP_Demo')
 
-    ### ADD NEW CODE HERE ###
+    path_data = Path(r'k:/PRM/Reference_Data/xx-State_Discharge_Playground/')
+    for path_sas7bdat in path_data.glob('*.sas7bdat'):
+        prm.spark.io_sas.convert_sas7bdat_to_parquet(sparkapp, path_sas7bdat)
 
     return 0
 
