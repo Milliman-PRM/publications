@@ -33,7 +33,7 @@ def main() -> int:
     )
 
 
-    ## Load up the discharges table
+    ## "Load" up the discharges table
     df_discharges = sparkapp.load_df(
         path_data / 'fl_processedip_2014b.parquet'
     )
@@ -56,13 +56,13 @@ def main() -> int:
     ## Show the raw SQL API
     df_discharges.createOrReplaceTempView('discharges')
     sparkapp.session.sql('''
-        select
+        SELECT
             lob,
             count(*) as row_cnt,
             round(avg(los), 2) as avg_los
-        from discharges
-        group by lob
-        order by row_cnt desc
+        FROM discharges
+        GROUP BY lob
+        ORDER BY row_cnt desc
     ''').show()
 
 
