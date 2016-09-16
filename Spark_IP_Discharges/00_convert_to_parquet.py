@@ -37,7 +37,6 @@ if __name__ == '__main__':
     # pylint: disable=wrong-import-position, wrong-import-order, ungrouped-imports
     import sys
     import prm.utils.logging_ext
-    import prm.spark.defaults_prm
 
     prm.utils.logging_ext.setup_logging_stdout_handler()
 
