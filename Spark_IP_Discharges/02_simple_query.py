@@ -37,6 +37,7 @@ def main() -> int:
     df_discharges = sparkapp.load_df(
         path_data / 'fl_processedip_2014b.parquet'
     )
+    print(df_discharges.count())
 
 
     ## Show the Domain Specific Language (DSL) API
@@ -70,12 +71,15 @@ def main() -> int:
     _df_grouped = df_discharges.groupBy(
         'lob'
     )
-    _df_agged = _df_grouped.agg(
+    _avg_los_expressions = [
         F.count('*').alias('row_cnt'),
         F.round(
             F.avg('los'),
             2,
         ).alias('avg_los'),
+    ]
+    _df_agged = _df_grouped.agg(
+        *_avg_los_expressions
     )
     _df_ordered = _df_agged.orderBy(
         F.desc('row_cnt')
@@ -86,6 +90,29 @@ def main() -> int:
     ## Show the query plan
     _df_ordered.explain()
 
+
+    ## Load up providers
+    df_providers = sparkapp.load_df(
+        path_data / 'fl_provider_2014.parquet'
+    )
+    print(df_providers.count())
+
+
+    ## Show a join and aggregate
+    sparkapp.spark_sql_shuffle_partitions = 12
+    df_discharges.join(
+        df_providers,
+        on='providerid',
+        how='left_outer',
+    ).groupBy(
+        df_providers.providername,
+    ).agg(
+        *_avg_los_expressions
+    ).orderBy(
+        F.desc('row_cnt')
+    ).show()
+
+
     return 0
 
 
@@ -93,7 +120,6 @@ if __name__ == '__main__':
     # pylint: disable=wrong-import-position, wrong-import-order, ungrouped-imports
     import sys
     import prm.utils.logging_ext
-    import prm.spark.defaults_prm
 
     prm.utils.logging_ext.setup_logging_stdout_handler()
 
