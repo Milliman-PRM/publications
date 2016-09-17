@@ -113,6 +113,16 @@ def main() -> int:
     ).show()
 
 
+    # Show a CSV read
+    df_hcpcs = sparkapp.session.read.csv(
+        str(path_data / 'Ref009_HCG_refMR_HCPCS.txt'),
+        sep='|',
+        header=True,
+        inferSchema=True,
+    )
+    df_hcpcs.printSchema()
+    df_hcpcs.select('PROC_DESC', 'MR_LINE_DESC').show()
+
     return 0
 
 
