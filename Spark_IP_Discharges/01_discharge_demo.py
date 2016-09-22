@@ -59,7 +59,7 @@ def main() -> int:
             lob,
             count(*) as row_cnt,
             round(avg(los), 2) as avg_los
-        FROM discharges
+        FROM fl_processedip_2014b
         GROUP BY lob
         ORDER BY row_cnt desc
     ''').show()
