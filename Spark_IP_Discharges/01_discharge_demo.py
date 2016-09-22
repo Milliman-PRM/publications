@@ -39,6 +39,10 @@ def main() -> int:
     print(df_discharges.count())
 
 
+    ## Peek into the DataFrame
+    df_discharges.select('lob', 'los').show(10)
+
+
     ## Show the Domain Specific Language (DSL) API
     df_discharges.groupBy(
         'lob'
@@ -108,7 +112,7 @@ def main() -> int:
         *_avg_los_expressions
     ).orderBy(
         F.desc('row_cnt')
-    ).show()
+    ).show(10)
 
 
     ## Show a CSV read
@@ -119,7 +123,7 @@ def main() -> int:
         inferSchema=True,
     )
     df_hcpcs.printSchema()
-    df_hcpcs.select('PROC_DESC', 'MR_LINE_DESC').show()
+    df_hcpcs.select('PROC_DESC', 'MR_LINE_DESC').show(10)
 
     return 0
 
