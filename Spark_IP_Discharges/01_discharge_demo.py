@@ -14,7 +14,6 @@ import pyspark.sql.functions as F
 # pylint: disable=no-member
 
 from prm.spark.app import SparkApp
-import prm.spark.io_sas
 
 LOGGER = logging.getLogger(__name__)
 
