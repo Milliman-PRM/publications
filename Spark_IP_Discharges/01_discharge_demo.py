@@ -55,7 +55,6 @@ def main() -> int:
 
 
     ## Show the raw SQL API
-    df_discharges.createOrReplaceTempView('discharges')
     sparkapp.session.sql('''
         SELECT
             lob,
@@ -113,7 +112,7 @@ def main() -> int:
     ).show()
 
 
-    # Show a CSV read
+    ## Show a CSV read
     df_hcpcs = sparkapp.session.read.csv(
         str(path_data / 'Ref009_HCG_refMR_HCPCS.txt'),
         sep='|',
