@@ -27,12 +27,13 @@ def main() -> int:
     """Demonstrate Spark APIs"""
 
     sparkapp = SparkApp('FL_IP_Demo')
+    # Show WebUI and Process Tree
     path_data = Path(
         r'k:/PRM/Reference_Data/xx-State_Discharge_Playground/'
     )
 
 
-    ## "Load" up the discharges table
+    ## Load up the discharges table
     df_discharges = sparkapp.load_df(
         path_data / 'fl_processedip_2014b.parquet'
     )
@@ -44,8 +45,24 @@ def main() -> int:
     # sparkapp.view_df(df_discharges)
 
 
+    ## Show the raw SQL API
+    df_los_by_lob1 = sparkapp.session.sql('''
+        SELECT
+            lob,
+            count(*) as row_cnt,
+            round(avg(los), 2) as avg_los
+        FROM fl_processedip_2014b
+        GROUP BY lob
+        ORDER BY row_cnt desc
+    ''')
+    # The above is lazy
+    df_los_by_lob1.show()
+    # Show DAG view on WebUI
+    # sparkapp.view_df(df_los_by_lob1)
+
+
     ## Show the Domain Specific Language (DSL) API
-    df_los_by_lob1 = df_discharges.groupBy(
+    df_los_by_lob2 = df_discharges.groupBy(
         'lob'
     ).agg(
         F.count('*').alias('row_cnt'),
@@ -56,20 +73,6 @@ def main() -> int:
     ).orderBy(
         F.desc('row_cnt')
     )
-    df_los_by_lob1.show()
-    # sparkapp.view_df(df_los_by_lob1)
-
-
-    ## Show the raw SQL API
-    df_los_by_lob2 = sparkapp.session.sql('''
-        SELECT
-            lob,
-            count(*) as row_cnt,
-            round(avg(los), 2) as avg_los
-        FROM fl_processedip_2014b
-        GROUP BY lob
-        ORDER BY row_cnt desc
-    ''')
     df_los_by_lob2.show()
 
 
@@ -119,6 +122,7 @@ def main() -> int:
         F.desc('row_cnt')
     )
     df_los_by_prv.show(10)
+    # Show DAG view on WebUI
     # sparkapp.view_df(df_los_by_prv)
 
 
