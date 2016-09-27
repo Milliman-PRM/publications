@@ -41,10 +41,11 @@ def main() -> int:
 
     ## Peek into the DataFrame
     df_discharges.select('lob', 'los').show(10)
+    # sparkapp.view_df(df_discharges)
 
 
     ## Show the Domain Specific Language (DSL) API
-    df_discharges.groupBy(
+    df_los_by_lob1 = df_discharges.groupBy(
         'lob'
     ).agg(
         F.count('*').alias('row_cnt'),
@@ -54,11 +55,13 @@ def main() -> int:
         ).alias('avg_los'),
     ).orderBy(
         F.desc('row_cnt')
-    ).show()
+    )
+    df_los_by_lob1.show()
+    # sparkapp.view_df(df_los_by_lob1)
 
 
     ## Show the raw SQL API
-    sparkapp.session.sql('''
+    df_los_by_lob2 = sparkapp.session.sql('''
         SELECT
             lob,
             count(*) as row_cnt,
@@ -66,7 +69,8 @@ def main() -> int:
         FROM fl_processedip_2014b
         GROUP BY lob
         ORDER BY row_cnt desc
-    ''').show()
+    ''')
+    df_los_by_lob2.show()
 
 
     ## Show a lazy composition of the DSL API
@@ -83,14 +87,14 @@ def main() -> int:
     _df_agged = _df_grouped.agg(
         *_avg_los_expressions
     )
-    _df_ordered = _df_agged.orderBy(
+    df_los_by_lob3 = _df_agged.orderBy(
         F.desc('row_cnt')
     )
-    _df_ordered.show()
+    df_los_by_lob3.show()
 
 
     ## Show the query plan
-    _df_ordered.explain()
+    df_los_by_lob3.explain()
 
 
     ## Load up providers
@@ -98,11 +102,12 @@ def main() -> int:
         path_data / 'fl_provider_2014.parquet'
     )
     print(df_providers.count())
+    # sparkapp.view_df(df_providers)
 
 
     ## Show a join and aggregate
     sparkapp.spark_sql_shuffle_partitions = 12
-    df_discharges.join(
+    df_los_by_prv = df_discharges.join(
         df_providers,
         on='providerid',
         how='left_outer',
@@ -112,7 +117,9 @@ def main() -> int:
         *_avg_los_expressions
     ).orderBy(
         F.desc('row_cnt')
-    ).show(10)
+    )
+    df_los_by_prv.show(10)
+    # sparkapp.view_df(df_los_by_prv)
 
 
     ## Show a CSV read
@@ -124,6 +131,7 @@ def main() -> int:
     )
     df_hcpcs.printSchema()
     df_hcpcs.select('PROC_DESC', 'MR_LINE_DESC').show(10)
+    # sparkapp.view_df(df_hcpcs)
 
     return 0
 
