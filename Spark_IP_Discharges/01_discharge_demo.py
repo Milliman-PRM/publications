@@ -26,7 +26,7 @@ LOGGER = logging.getLogger(__name__)
 def main() -> int:
     """Demonstrate Spark APIs"""
 
-    sparkapp = SparkApp('FL_IP_Demo')
+    sparkapp = SparkApp('FL_IP_Demo') # This entry point made by us
     # Show WebUI and Process Tree
     path_data = Path(
         r'k:/PRM/Reference_Data/xx-State_Discharge_Playground/'
@@ -42,7 +42,7 @@ def main() -> int:
 
     ## Peek into the DataFrame
     df_discharges.select('lob', 'los').show(10)
-    # sparkapp.view_df(df_discharges)
+    # sparkapp.view_df(df_discharges) # This GUI view made by us
 
 
     ## Show the raw SQL API
@@ -125,6 +125,8 @@ def main() -> int:
     # Show DAG view on WebUI
     # sparkapp.view_df(df_los_by_prv)
 
+
+    # Offer discussion of parquet, caching or CSV reading
 
     ## Show a CSV read
     df_hcpcs = sparkapp.session.read.csv(
