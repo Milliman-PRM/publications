@@ -1,5 +1,5 @@
 """
-### CODE OWNERS: Shea Parkes
+### CODE OWNERS: Shea Parkes, Kyle Baird
 
 ### OBJECTIVE:
   Demonstrate the DataFrame APIs
@@ -26,13 +26,14 @@ LOGGER = logging.getLogger(__name__)
 def main() -> int:
     """Demonstrate Spark APIs"""
 
-    sparkapp = SparkApp('FL_IP_Demo')
+    sparkapp = SparkApp('FL_IP_Demo') # This entry point made by us
+    # Show WebUI and Process Tree
     path_data = Path(
         r'k:/PRM/Reference_Data/xx-State_Discharge_Playground/'
     )
 
 
-    ## "Load" up the discharges table
+    ## Load up the discharges table
     df_discharges = sparkapp.load_df(
         path_data / 'fl_processedip_2014b.parquet'
     )
@@ -41,10 +42,27 @@ def main() -> int:
 
     ## Peek into the DataFrame
     df_discharges.select('lob', 'los').show(10)
+    # sparkapp.view_df(df_discharges) # This GUI view made by us
+
+
+    ## Show the raw SQL API
+    df_los_by_lob1 = sparkapp.session.sql('''
+        SELECT
+            lob,
+            count(*) as row_cnt,
+            round(avg(los), 2) as avg_los
+        FROM fl_processedip_2014b
+        GROUP BY lob
+        ORDER BY row_cnt desc
+    ''')
+    # The above is lazy
+    df_los_by_lob1.show()
+    # Show DAG view on WebUI
+    # sparkapp.view_df(df_los_by_lob1)
 
 
     ## Show the Domain Specific Language (DSL) API
-    df_discharges.groupBy(
+    df_los_by_lob2 = df_discharges.groupBy(
         'lob'
     ).agg(
         F.count('*').alias('row_cnt'),
@@ -54,19 +72,8 @@ def main() -> int:
         ).alias('avg_los'),
     ).orderBy(
         F.desc('row_cnt')
-    ).show()
-
-
-    ## Show the raw SQL API
-    sparkapp.session.sql('''
-        SELECT
-            lob,
-            count(*) as row_cnt,
-            round(avg(los), 2) as avg_los
-        FROM fl_processedip_2014b
-        GROUP BY lob
-        ORDER BY row_cnt desc
-    ''').show()
+    )
+    df_los_by_lob2.show()
 
 
     ## Show a lazy composition of the DSL API
@@ -83,14 +90,14 @@ def main() -> int:
     _df_agged = _df_grouped.agg(
         *_avg_los_expressions
     )
-    _df_ordered = _df_agged.orderBy(
+    df_los_by_lob3 = _df_agged.orderBy(
         F.desc('row_cnt')
     )
-    _df_ordered.show()
+    df_los_by_lob3.show()
 
 
     ## Show the query plan
-    _df_ordered.explain()
+    df_los_by_lob3.explain()
 
 
     ## Load up providers
@@ -98,11 +105,12 @@ def main() -> int:
         path_data / 'fl_provider_2014.parquet'
     )
     print(df_providers.count())
+    # sparkapp.view_df(df_providers)
 
 
     ## Show a join and aggregate
     sparkapp.spark_sql_shuffle_partitions = 12
-    df_discharges.join(
+    df_los_by_prv = df_discharges.join(
         df_providers,
         on='providerid',
         how='left_outer',
@@ -112,8 +120,13 @@ def main() -> int:
         *_avg_los_expressions
     ).orderBy(
         F.desc('row_cnt')
-    ).show(10)
+    )
+    df_los_by_prv.show(10)
+    # Show DAG view on WebUI
+    # sparkapp.view_df(df_los_by_prv)
 
+
+    # Offer discussion of parquet, caching or CSV reading
 
     ## Show a CSV read
     df_hcpcs = sparkapp.session.read.csv(
@@ -124,6 +137,7 @@ def main() -> int:
     )
     df_hcpcs.printSchema()
     df_hcpcs.select('PROC_DESC', 'MR_LINE_DESC').show(10)
+    # sparkapp.view_df(df_hcpcs)
 
     return 0
 
