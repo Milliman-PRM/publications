@@ -30,10 +30,10 @@ LOGGER = logging.getLogger(__name__)
 PRM_META = prm.meta.project.parse_project_metadata()
 
 PATH_COND_PRED_FEAT = PRM_META[160, "out"] / 'cond_cred_pred_feat.sas7bdat'
-PATH_MEMBER_PARQUET = PRM_META[35, "out"] / 'member'
+PATH_MEMBER_PARQUET = PRM_META[35, "out"] / 'member.parquet'
 PATH_COND_TUNE_FEAT = PRM_META[160, "out"] / 'cond_cred_tune_feat.sas7bdat'
 PATH_COND_TUNE_RESP = PRM_META[160, "out"] / 'cond_cred_tune_resp.sas7bdat'
-PATH_DEMOG_FEATURES = PRM_META[160, "out"] / 'df_demog_long'
+PATH_DEMOG_FEATURES = PRM_META[160, "out"] / 'df_demog_long.parquet'
 DIR_EXPORT = PRM_META[160, "out"]
 DIR_CHECKPOINT = PRM_META[160, "temp"]
 
@@ -280,7 +280,7 @@ class Recommender:
         self.prod_map = df_product_map
         self.df_ratings = df_ratings
 
-        self.rdd_ratings = df_ratings.map(
+        self.rdd_ratings = df_ratings.rdd.map(
             lambda row: Rating(int(row['user_id']), int(row['product_id']),
                                float(row['confidence'])))
         self.rdd_ratings.cache()
@@ -606,7 +606,7 @@ def evaluate_predictions(recommender, df_train, df_member, df_gender_label, df_t
     preds_stack = mean_predicted.unionAll(mean_predicted_popular).cache()
     sparkapp.save_df(
         preds_stack,
-        DIR_EXPORT / 'model_evaluation'
+        DIR_EXPORT / 'model_evaluation.parquet'
         )
         
     results = preds_stack.collect()
