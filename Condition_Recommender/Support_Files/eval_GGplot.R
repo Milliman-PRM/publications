@@ -40,7 +40,7 @@ sc <- sparkR.init()
 sq <- sparkRSQL.init(sc)
 
 # load parquet file into a Spark data frame and coerce into R data frame
-df <- collect(read.parquet(sq, paste0(dir.data, 'model_evaluation')))
+df <- collect(read.parquet(sq, paste0(dir.data, 'model_evaluation.parquet')))
 
 plot.skel <- df %>%
   mutate(
@@ -68,7 +68,7 @@ plot.facet <- plot.skel + geom_point(
     aes(x=pred_rank,y=cumul_pred, color=pred_type_pretty)
   ) +
   scale_x_continuous(name='\nNumber of predicted conditions per patient', breaks=c(1,5,10,15)) +
-  scale_y_continuous(name='Percent of new conditions\ncaptured in predictions\n', labels=percent,breaks=seq(0,1,0.1), limits=c(0,0.7)) +
+  scale_y_continuous(name='Percent of new conditions\ncaptured in predictions\n', labels=percent,breaks=seq(0,1,0.1), limits=c(0,0.75)) +
   labs(color='Model Type') +
   theme(
       #panel.border = element_blank()
@@ -77,27 +77,41 @@ plot.facet <- plot.skel + geom_point(
       axis.line = element_line(colour = "black")
   ) +
   ggtitle('Model accuracy\non two month hold-out')+
-  coord_cartesian(ylim=c(0,0.73))
+  coord_cartesian(ylim=c(0,0.75))
 plot.facet
 
+ggwrapper <- function(extension){
+  ggsave(
+    paste0('eval_facet.', extension)
+    ,plot.facet
+    #,type=type
+    ,scale=1.1
+    ,width=6
+    ,height=4
+  )
+  
+  ggsave(
+    paste0('eval_facet_large.', extension)
+    ,plot.facet
+    #,type=type
+    ,scale=.75
+    ,width=12
+    ,height=8
+  )
+  
+  ggsave(
+    paste0('eval_facet_small.', extension)
+    ,plot.facet
+    #,type=type
+    ,scale=1.2
+    ,width=4.5
+    ,height=3
+  )
+}
+ggwrapper('jpeg')
+ggwrapper('bmp')
+ggwrapper('svg')
 
-ggsave(
-  paste0('eval_facet.png')
-  ,plot.facet
-  ,type='cairo-png'
-  ,scale=1.1
-  ,width=6
-  ,height=4
-)
-
-ggsave(
-  paste0('eval_facet_presentation.png')
-  ,plot.facet
-  ,type='cairo-png'
-  ,scale=.75
-  ,width=12
-  ,height=8
-)
 
 
 # terminate Spark session
