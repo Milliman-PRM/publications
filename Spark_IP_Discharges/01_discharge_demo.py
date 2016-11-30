@@ -42,7 +42,7 @@ def main() -> int:
 
     ## Peek into the DataFrame
     df_discharges.select('lob', 'los').show(10)
-    # sparkapp.view_df(df_discharges) # This GUI view made by us
+    # df_discharges.view() # This GUI view made by us
 
 
     ## Show the raw SQL API
@@ -58,7 +58,7 @@ def main() -> int:
     # The above is lazy
     df_los_by_lob1.show()
     # Show DAG view on WebUI
-    # sparkapp.view_df(df_los_by_lob1)
+    # df_los_by_lob1.view()
 
 
     ## Show the Domain Specific Language (DSL) API
@@ -105,7 +105,7 @@ def main() -> int:
         path_data / 'fl_provider_2014.parquet'
     )
     print(df_providers.count())
-    # sparkapp.view_df(df_providers)
+    # df_providers.view()
 
 
     ## Show a join and aggregate
@@ -123,7 +123,7 @@ def main() -> int:
     )
     df_los_by_prv.show(10)
     # Show DAG view on WebUI
-    # sparkapp.view_df(df_los_by_prv)
+    # df_los_by_prv.view()
 
 
     # Offer discussion of parquet, caching or CSV reading
@@ -137,7 +137,7 @@ def main() -> int:
     )
     df_hcpcs.printSchema()
     df_hcpcs.select('PROC_DESC', 'MR_LINE_DESC').show(10)
-    # sparkapp.view_df(df_hcpcs)
+    # df_hcpcs.view()
 
     return 0
 
